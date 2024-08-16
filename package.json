@@ -6,7 +6,7 @@
 	"scripts": {
 		"dev": "vite",
 		"build": "tsc -b && vite build",
-		"test": "vitest --watch",
+		"test:watch": "vitest --watch",
 		"format:check": "biome check ./src",
 		"format:fix": "biome check --write ./src",
 		"preview": "vite preview"
@@ -20,12 +20,14 @@
 		"@biomejs/biome": "1.8.3",
 		"@eslint/js": "^9.9.0",
 		"@testing-library/dom": "^10.4.0",
+		"@testing-library/jest-dom": "^6.4.8",
 		"@testing-library/react": "^16.0.0",
 		"@types/react": "^18.3.3",
 		"@types/react-dom": "^18.3.0",
 		"@vitejs/plugin-react-swc": "^3.5.0",
 		"eslint-plugin-react-hooks": "^5.1.0-rc.0",
 		"eslint-plugin-react-refresh": "^0.4.9",
+		"jsdom": "^24.1.1",
 		"typescript": "^5.5.3",
 		"typescript-eslint": "^8.0.1",
 		"vite": "^5.4.1",
