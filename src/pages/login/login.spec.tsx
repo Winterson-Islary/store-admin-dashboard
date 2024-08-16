@@ -9,5 +9,10 @@ describe("Login Page", () => {
 		// QueryBy* -> Similar to GetBy*, but does not throw error
 		// FindBY* -> For Async
 		expect(screen.getByText(/Sign In/)).toBeInTheDocument();
+		expect(screen.getByPlaceholderText("Username")).toBeInTheDocument();
+		expect(screen.getByPlaceholderText("Password")).toBeInTheDocument();
+		expect(
+			screen.getByRole("button", { name: "Log in" }),
+		).toBeInTheDocument();
 	});
 });
