@@ -9,7 +9,11 @@
 		"test:watch": "vitest --watch",
 		"format:check": "biome check ./src",
 		"format:fix": "biome check --write ./src",
-		"preview": "vite preview"
+		"preview": "vite preview",
+		"prepare": "husky"
+	},
+	"lint-staged": {
+		"*.{ts,tsx,jsx,js}": ["pnpm run format:fix"]
 	},
 	"dependencies": {
 		"@hookform/resolvers": "^3.9.0",
@@ -40,7 +44,9 @@
 		"@types/react-dom": "^18.3.0",
 		"@vitejs/plugin-react-swc": "^3.5.0",
 		"autoprefixer": "^10.4.20",
+		"husky": "^9.1.4",
 		"jsdom": "^24.1.1",
+		"lint-staged": "^15.2.9",
 		"postcss": "^8.4.41",
 		"tailwindcss": "^3.4.10",
 		"typescript": "^5.5.3",

@@ -25,7 +25,7 @@ const LoginPage = () => {
 		},
 	});
 	const onSubmit = (values: z.infer<typeof signInSchema>) => {
-		console.log(values);
+		console.info(values);
 	};
 	return (
 		<div className="h-screen w-full flex items-center justify-center">

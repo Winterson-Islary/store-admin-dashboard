@@ -8,4 +8,5 @@ const ResizeObserverMock = vi.fn(() => ({
 	disconnect: vi.fn(),
 }));
 
+// STUB the global ResizeObserver
 vi.stubGlobal("ResizeObserver", ResizeObserverMock);
