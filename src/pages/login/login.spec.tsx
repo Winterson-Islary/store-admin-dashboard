@@ -3,6 +3,9 @@ import { render, screen } from "@testing-library/react";
 import LoginPage from "./login";
 
 describe("Login Page", () => {
+	beforeEach(() => {});
+	afterEach(() => {});
+
 	it("should render with required fields", () => {
 		render(<LoginPage />);
 		// GetBy* -> Throws Error
