@@ -11,7 +11,7 @@
 				"noUnusedVariables": "warn"
 			},
 			"nursery": {
-				"noConsole": "error"
+				"noConsole": "off"
 			}
 		}
 	},
