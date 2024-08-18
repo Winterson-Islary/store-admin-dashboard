@@ -1,3 +1,4 @@
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Checkbox } from "@/components/ui/checkbox";
@@ -15,12 +16,11 @@ import type { UserLoginData } from "@/lib/types";
 import signInSchema from "@/validators/signIn-validator";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { ReloadIcon } from "@radix-ui/react-icons";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useMutation } from "@tanstack/react-query";
 import { useForm } from "react-hook-form";
 import type { z } from "zod";
 
 const LoginPage = () => {
-	const queryClient = useQueryClient();
 	const mutation = useMutation({
 		mutationKey: ["login"],
 		mutationFn: LoginUser,
@@ -54,6 +54,16 @@ const LoginPage = () => {
 				</CardHeader>
 				<CardContent className="flex flex-col gap-6 w-full">
 					<Form {...form}>
+						{mutation.isError && (
+							<Alert>
+								<AlertTitle className="font-bold">
+									ERROR!
+								</AlertTitle>
+								<AlertDescription className="font-semibold">
+									{mutation.error?.message}
+								</AlertDescription>
+							</Alert>
+						)}
 						<form
 							onSubmit={form.handleSubmit((values) =>
 								onSubmit(values),
