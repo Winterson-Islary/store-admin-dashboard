@@ -78,7 +78,7 @@ const LoginPage = () => {
 										<FormControl>
 											<Input
 												type="text"
-												placeholder="email"
+												placeholder="Email"
 												{...field}
 											/>
 										</FormControl>
