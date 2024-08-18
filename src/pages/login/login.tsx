@@ -10,9 +10,11 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import type { UserLoginDataSchema } from "@/lib/types";
+import { login } from "@/http/api";
+import type { UserLoginData } from "@/lib/types";
 import signInSchema from "@/validators/signIn-validator";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { ReloadIcon } from "@radix-ui/react-icons";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useForm } from "react-hook-form";
 import type { z } from "zod";
@@ -119,9 +121,16 @@ const LoginPage = () => {
 									<a href="@">Forgot password</a>
 								</Button>
 							</section>
-							<Button variant="default" type="submit">
-								Log in
-							</Button>
+							{mutation.isPending ? (
+								<Button disabled>
+									<ReloadIcon className="mr-2 animate-spin" />{" "}
+									Log in
+								</Button>
+							) : (
+								<Button variant="default" type="submit">
+									Log in
+								</Button>
+							)}
 						</form>
 					</Form>
 				</CardContent>
@@ -133,7 +142,8 @@ const LoginPage = () => {
 export default LoginPage;
 
 //* HELPER FUNCTIONS
-type UserLoginData = z.infer<typeof UserLoginDataSchema>;
 const LoginUser = async (Data: UserLoginData) => {
 	//TODO: SERVER CALL LOGIC
+	const { data } = await login(Data);
+	return data;
 };
