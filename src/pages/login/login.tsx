@@ -10,22 +10,37 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import type { UserLoginDataSchema } from "@/lib/types";
 import signInSchema from "@/validators/signIn-validator";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useForm } from "react-hook-form";
 import type { z } from "zod";
 
 const LoginPage = () => {
+	const queryClient = useQueryClient();
+	const mutation = useMutation({
+		mutationKey: ["login"],
+		mutationFn: LoginUser,
+		onSuccess: async () => {
+			console.info("Login Successful");
+		},
+	});
 	const form = useForm<z.infer<typeof signInSchema>>({
 		resolver: zodResolver(signInSchema),
 		defaultValues: {
-			username: "",
+			email: "",
 			password: "",
 			remember: false,
 		},
 	});
 	const onSubmit = (values: z.infer<typeof signInSchema>) => {
 		console.info(values);
+		mutation.mutate({
+			email: values.email,
+			password: values.password,
+			remember: values.remember,
+		});
 	};
 	return (
 		<div className="h-screen w-full flex items-center justify-center">
@@ -45,13 +60,13 @@ const LoginPage = () => {
 						>
 							<FormField
 								control={form.control}
-								name="username"
+								name="email"
 								render={({ field }) => (
 									<FormItem>
 										<FormControl>
 											<Input
 												type="text"
-												placeholder="Username"
+												placeholder="email"
 												{...field}
 											/>
 										</FormControl>
@@ -116,3 +131,9 @@ const LoginPage = () => {
 };
 
 export default LoginPage;
+
+//* HELPER FUNCTIONS
+type UserLoginData = z.infer<typeof UserLoginDataSchema>;
+const LoginUser = async (Data: UserLoginData) => {
+	//TODO: SERVER CALL LOGIC
+};
