@@ -11,21 +11,28 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { login } from "@/http/api";
-import type { UserLoginData } from "@/lib/types";
+import { login, whoami } from "@/http/api";
+import type { SelfData, UserLoginData } from "@/lib/types";
 import signInSchema from "@/validators/signIn-validator";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { ReloadIcon } from "@radix-ui/react-icons";
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQuery } from "@tanstack/react-query";
 import { useForm } from "react-hook-form";
 import type { z } from "zod";
 
 const LoginPage = () => {
+	const selfQuery = useQuery({
+		queryKey: ["whoami"],
+		queryFn: GetSelf,
+		enabled: false,
+	});
 	const mutation = useMutation({
 		mutationKey: ["login"],
 		mutationFn: LoginUser,
 		onSuccess: async () => {
 			console.info("Login Successful");
+			selfQuery.refetch();
+			console.log("Userdata: ", selfQuery.data);
 		},
 	});
 	const form = useForm<z.infer<typeof signInSchema>>({
@@ -156,4 +163,9 @@ const LoginUser = async (Data: UserLoginData) => {
 	//TODO: SERVER CALL LOGIC
 	const { data } = await login(Data);
 	return data;
+};
+
+const GetSelf = async () => {
+	const { data } = await whoami();
+	return data as SelfData;
 };
