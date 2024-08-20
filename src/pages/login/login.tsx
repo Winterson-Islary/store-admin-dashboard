@@ -13,6 +13,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { login, whoami } from "@/http/api";
 import type { SelfData, UserLoginData } from "@/lib/types";
+import { useAuthStore } from "@/store";
 import signInSchema from "@/validators/signIn-validator";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { ReloadIcon } from "@radix-ui/react-icons";
@@ -21,6 +22,7 @@ import { useForm } from "react-hook-form";
 import type { z } from "zod";
 
 const LoginPage = () => {
+	const authStore = useAuthStore();
 	const selfQuery = useQuery({
 		queryKey: ["whoami"],
 		queryFn: GetSelf,
@@ -31,8 +33,9 @@ const LoginPage = () => {
 		mutationFn: LoginUser,
 		onSuccess: async () => {
 			console.info("Login Successful");
-			selfQuery.refetch();
-			console.log("Userdata: ", selfQuery.data);
+			const selfData = await selfQuery.refetch();
+			authStore.setUser(selfData.data ?? null);
+			console.log("Userdata: ", authStore.User);
 		},
 	});
 	const form = useForm<z.infer<typeof signInSchema>>({
