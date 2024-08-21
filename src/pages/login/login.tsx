@@ -11,7 +11,8 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { login, whoami } from "@/http/api";
+import { usePermission } from "@/hooks/usePermission";
+import { login, logout, whoami } from "@/http/api";
 import type { SelfData, UserLoginData } from "@/lib/types";
 import { useAuthStore } from "@/store";
 import signInSchema from "@/validators/signIn-validator";
@@ -23,17 +24,30 @@ import type { z } from "zod";
 
 const LoginPage = () => {
 	const authStore = useAuthStore();
+	const { isAllowed } = usePermission();
 	const selfQuery = useQuery({
 		queryKey: ["whoami"],
 		queryFn: GetSelf,
 		enabled: false,
 	});
-	const mutation = useMutation({
+	const logoutMutation = useMutation({
+		mutationKey: ["logout"],
+		mutationFn: logout,
+		onSuccess: async () => {
+			authStore.logout();
+			return;
+		},
+	});
+	const loginMutation = useMutation({
 		mutationKey: ["login"],
 		mutationFn: LoginUser,
 		onSuccess: async () => {
 			console.info("Login Successful");
 			const selfData = await selfQuery.refetch();
+			if (!isAllowed(selfData.data ?? null)) {
+				logoutMutation.mutate();
+				return;
+			}
 			authStore.setUser(selfData.data ?? null);
 			console.log("Userdata: ", authStore.User);
 		},
@@ -48,7 +62,7 @@ const LoginPage = () => {
 	});
 	const onSubmit = (values: z.infer<typeof signInSchema>) => {
 		console.info(values);
-		mutation.mutate({
+		loginMutation.mutate({
 			email: values.email,
 			password: values.password,
 			remember: values.remember,
@@ -64,13 +78,13 @@ const LoginPage = () => {
 				</CardHeader>
 				<CardContent className="flex flex-col gap-6 w-full">
 					<Form {...form}>
-						{mutation.isError && (
+						{loginMutation.isError && (
 							<Alert>
 								<AlertTitle className="font-bold">
 									ERROR!
 								</AlertTitle>
 								<AlertDescription className="font-semibold">
-									{mutation.error?.message}
+									{loginMutation.error?.message}
 								</AlertDescription>
 							</Alert>
 						)}
@@ -141,7 +155,7 @@ const LoginPage = () => {
 									<a href="@">Forgot password</a>
 								</Button>
 							</section>
-							{mutation.isPending ? (
+							{loginMutation.isPending ? (
 								<Button disabled>
 									<ReloadIcon className="mr-2 animate-spin" />{" "}
 									Log in
