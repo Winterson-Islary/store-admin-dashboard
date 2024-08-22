@@ -12,8 +12,8 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { usePermission } from "@/hooks/usePermission";
-import { login, logout, whoami } from "@/http/api";
-import type { SelfData, UserLoginData } from "@/lib/types";
+import { logout } from "@/http/api";
+import { GetSelf, LoginUser } from "@/http/client";
 import { useAuthStore } from "@/store";
 import signInSchema from "@/validators/signIn-validator";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -174,15 +174,3 @@ const LoginPage = () => {
 };
 
 export default LoginPage;
-
-//* HELPER FUNCTIONS
-const LoginUser = async (Data: UserLoginData) => {
-	//TODO: SERVER CALL LOGIC
-	const { data } = await login(Data);
-	return data;
-};
-
-const GetSelf = async () => {
-	const { data } = await whoami();
-	return data as SelfData;
-};
