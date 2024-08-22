@@ -1,6 +1,7 @@
 import { GetSelf } from "@/http/client";
 import { useAuthStore } from "@/store";
 import { useQuery } from "@tanstack/react-query";
+import { AxiosError } from "axios";
 import { useEffect } from "react";
 import { Outlet } from "react-router-dom";
 
@@ -9,16 +10,19 @@ const Root = () => {
 	const selfQuery = useQuery({
 		queryKey: ["whoami"],
 		queryFn: GetSelf,
+		retry: (failureCount: number, error) => {
+			if (error instanceof AxiosError && error.response?.status === 401) {
+				return false;
+			}
+			return failureCount < 3;
+		},
 	});
 
 	useEffect(() => {
-		if (selfQuery.error) {
-			console.log(selfQuery.error);
-		}
 		if (selfQuery.data) {
 			authStore.setUser(selfQuery.data ?? null);
 		}
-	}, [selfQuery.data, authStore.setUser, selfQuery.error]);
+	}, [selfQuery.data, authStore.setUser]);
 
 	if (selfQuery.isLoading) {
 		return <div>Loading...</div>;
