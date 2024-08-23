@@ -84,7 +84,13 @@ const LoginPage = () => {
 									ERROR!
 								</AlertTitle>
 								<AlertDescription className="font-semibold">
-									{loginMutation.error?.message}
+									{loginMutation.error?.message.includes(
+										"500",
+									) ||
+										(loginMutation.error?.message.includes(
+											"401",
+										) &&
+											"Incorrect email or password.")}
 								</AlertDescription>
 							</Alert>
 						)}

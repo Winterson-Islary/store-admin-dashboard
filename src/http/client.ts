@@ -1,5 +1,6 @@
-import type { SelfData, UserLoginData } from "@/lib/types";
-import axios from "axios";
+import type { OriginalRequest, SelfData, UserLoginData } from "@/lib/types";
+import { useAuthStore } from "@/store";
+import axios, { type AxiosError } from "axios";
 import { login, whoami } from "./api";
 
 const api = axios.create({
@@ -10,10 +11,44 @@ const api = axios.create({
 		Accept: "application/json",
 	},
 });
+
+// Intercept response for handling 401 status code.
+api.interceptors.response.use(
+	(response) => response,
+	async (error: AxiosError) => {
+		const _originalRequest: OriginalRequest | undefined = error.config; // e.config preserves the 'Request' that failed.
+		const _originalHeaders = { ..._originalRequest?.headers };
+		if (error.response?.status === 401 && !_originalRequest?.isRetry) {
+			try {
+				if (_originalRequest) {
+					_originalRequest.isRetry = true;
+				}
+				await RefreshToken();
+				return api.request({
+					..._originalRequest,
+					headers: _originalHeaders,
+				});
+			} catch (err) {
+				console.error("Error while refreshing token");
+				console.error(err);
+				useAuthStore.getState().logout();
+				return Promise.reject(err);
+			}
+		}
+
+		return Promise.reject(error);
+	},
+);
 //* HELPER FUNCTIONS
 
+const RefreshToken = async () => {
+	await axios.post(
+		`${import.meta.env.VITE_BACKEND_API_URL}/auth/refresh`,
+		{},
+		{ withCredentials: true },
+	);
+};
 const LoginUser = async (Data: UserLoginData) => {
-	//TODO: SERVER CALL LOGIC
 	const { data } = await login(Data);
 	return data;
 };

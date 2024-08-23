@@ -1,3 +1,4 @@
+import type { InternalAxiosRequestConfig } from "axios";
 import { z } from "zod";
 
 const UserLoginDataSchema = z.object({
@@ -14,3 +15,7 @@ const SelfDataSchema = z.object({
 
 export type UserLoginData = z.infer<typeof UserLoginDataSchema>;
 export type SelfData = z.infer<typeof SelfDataSchema>;
+
+export type OriginalRequest =
+	| ({ isRetry?: boolean } & InternalAxiosRequestConfig)
+	| undefined;
