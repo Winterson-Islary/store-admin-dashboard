@@ -16,9 +16,9 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Input } from "@/components/ui/input";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
+import { cn } from "@/lib/utils";
 import { useAuthStore } from "@/store";
 import {
-	Badge,
 	Bell,
 	CircleUser,
 	Home,
@@ -29,39 +29,38 @@ import {
 	PartyPopper,
 	Search,
 	ShoppingCart,
-	Users,
-	icons,
 } from "lucide-react";
-import { Link, Navigate, Outlet } from "react-router-dom";
+import { Link, Navigate, Outlet, useLocation } from "react-router-dom";
 const Dashboard = () => {
 	const { User } = useAuthStore();
 	if (User === null) {
 		return <Navigate to="/auth/login" replace={true} />;
 	}
+
 	const navItems = [
 		{
 			name: "Dashboard",
-			to: "",
+			to: "/",
 			icon: <Home className="h-4 w-4" />,
 		},
 		{
 			name: "Orders",
-			to: "Orders",
+			to: "/Orders",
 			icon: <ShoppingCart className="h-4 w-4" />,
 		},
 		{
 			name: "Products",
-			to: "Products",
+			to: "/Products",
 			icon: <Package className="h-4 w-4" />,
 		},
 		{
 			name: "Promos",
-			to: "Promos",
+			to: "/Promos",
 			icon: <PartyPopper className="h-4 w-4" />,
 		},
 		{
 			name: "Sales",
-			to: "Sales",
+			to: "/Sales",
 			icon: <LineChart className="h-4 w-4" />,
 		},
 	];
@@ -76,7 +75,7 @@ const Dashboard = () => {
 							className="flex items-center gap-2 font-semibold"
 						>
 							<Package2 className="h-6 w-6" />
-							<span className="">Acme Inc</span>
+							<span className="">Pizza Corp.</span>
 						</Link>
 						<Button
 							variant="outline"
@@ -92,14 +91,12 @@ const Dashboard = () => {
 					<div className="flex-1">
 						<nav className="grid items-start px-2 text-sm font-medium lg:px-4">
 							{navItems.map((item) => (
-								<Link
+								<NavBarItem
 									key={item.to}
-									to={`/${item.to}`}
-									className="flex items-center gap-3 rounded-lg px-3 py-2 text-muted-foreground transition-all hover:text-primary"
-								>
-									{item.icon}
-									{item.name}
-								</Link>
+									label={item.name}
+									link={item.to}
+									icon={item.icon}
+								/>
 							))}
 						</nav>
 					</div>
@@ -137,16 +134,14 @@ const Dashboard = () => {
 							</Button>
 						</SheetTrigger>
 						<SheetContent side="left" className="flex flex-col">
-							<nav className="grid gap-2 text-lg font-medium">
+							<nav className="grid gap-2 text-lg font-medium mt-5">
 								{navItems.map((item) => (
-									<Link
+									<NavBarItem
 										key={item.to}
-										to={`/${item.to}`}
-										className="flex items-center gap-3 rounded-lg px-3 py-2 text-muted-foreground transition-all hover:text-primary"
-									>
-										{item.icon}
-										{item.name}
-									</Link>
+										label={item.name}
+										link={item.to}
+										icon={item.icon}
+									/>
 								))}
 							</nav>
 							<div className="mt-auto">
@@ -219,3 +214,25 @@ const Dashboard = () => {
 export default Dashboard;
 
 // Helper Functions
+
+const NavBarItem = ({
+	label,
+	link,
+	icon,
+}: { label: string; link: string; icon: JSX.Element }) => {
+	const location = useLocation();
+	const isActive = location.pathname === link;
+
+	return (
+		<Link
+			to={link}
+			className={cn(
+				"flex items-center gap-3 rounded-lg px-3 py-2 text-muted-foreground transition-all hover:text-primary",
+				isActive && "text-primary bg-[#dff265] ",
+			)}
+		>
+			{icon}
+			{label}
+		</Link>
+	);
+};
