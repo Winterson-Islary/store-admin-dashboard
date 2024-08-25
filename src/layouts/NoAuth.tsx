@@ -8,7 +8,6 @@ const NoAuth = () => {
 	}
 	return (
 		<div>
-			<h1>NO AUTH</h1>
 			<Outlet />
 		</div>
 	);

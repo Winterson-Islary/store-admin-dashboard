@@ -16,8 +16,10 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Input } from "@/components/ui/input";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
+import { logout } from "@/http/api";
 import { cn } from "@/lib/utils";
 import { useAuthStore } from "@/store";
+import { useMutation } from "@tanstack/react-query";
 import {
 	Bell,
 	CircleUser,
@@ -32,9 +34,18 @@ import {
 } from "lucide-react";
 import { Link, Navigate, Outlet, useLocation } from "react-router-dom";
 const Dashboard = () => {
-	const { User } = useAuthStore();
+	const { User, logout: StoreLogout } = useAuthStore();
+	const logoutMutation = useMutation({
+		mutationKey: ["logout"],
+		mutationFn: logout,
+		onSuccess: async () => {
+			StoreLogout();
+			return;
+		},
+	});
+
 	if (User === null) {
-		<Navigate to="/auth/login" replace={true} />;
+		return <Navigate to="/auth/login" replace />;
 	}
 	const navItems = [
 		{
@@ -193,14 +204,18 @@ const Dashboard = () => {
 							<DropdownMenuItem>Settings</DropdownMenuItem>
 							<DropdownMenuItem>Support</DropdownMenuItem>
 							<DropdownMenuSeparator />
-							<DropdownMenuItem>Logout</DropdownMenuItem>
+							<DropdownMenuItem
+								onClick={() => logoutMutation.mutate()}
+							>
+								Logout
+							</DropdownMenuItem>
 						</DropdownMenuContent>
 					</DropdownMenu>
 				</header>
 				<main className="flex flex-1 flex-col gap-4 p-4 lg:gap-6 lg:p-6">
 					<div className="flex items-center">
 						<h1 className="text-lg font-semibold md:text-2xl">
-							Inventory
+							HISTORY
 						</h1>
 					</div>
 					<Outlet />
@@ -218,7 +233,11 @@ const NavBarItem = ({
 	label,
 	link,
 	icon,
-}: { label: string; link: string; icon: JSX.Element }) => {
+}: {
+	label: string;
+	link: string;
+	icon: JSX.Element;
+}) => {
 	const location = useLocation();
 	const isActive = location.pathname === link;
 
