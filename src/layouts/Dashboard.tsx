@@ -34,9 +34,8 @@ import { Link, Navigate, Outlet, useLocation } from "react-router-dom";
 const Dashboard = () => {
 	const { User } = useAuthStore();
 	if (User === null) {
-		return <Navigate to="/auth/login" replace={true} />;
+		<Navigate to="/auth/login" replace={true} />;
 	}
-
 	const navItems = [
 		{
 			name: "Dashboard",
