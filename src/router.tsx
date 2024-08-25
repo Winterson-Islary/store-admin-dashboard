@@ -1,10 +1,13 @@
 import Dashboard from "@/layouts/Dashboard";
-import { Categories } from "@/pages/Categories";
-import HomePage from "@/pages/HomePage";
+import Home from "@/pages/Home";
+import { Products } from "@/pages/Products";
 import LoginPage from "@/pages/login/login";
 import { createBrowserRouter } from "react-router-dom";
 import NoAuth from "./layouts/NoAuth";
 import Root from "./layouts/Root";
+import { Orders } from "./pages/Orders";
+import { Promos } from "./pages/Promos";
+import { Sales } from "./pages/Sales";
 
 export const router = createBrowserRouter([
 	{
@@ -17,11 +20,23 @@ export const router = createBrowserRouter([
 				children: [
 					{
 						path: "",
-						element: <HomePage />,
+						element: <Home />,
 					},
 					{
-						path: "/categories",
-						element: <Categories />,
+						path: "/products",
+						element: <Products />,
+					},
+					{
+						path: "/Orders",
+						element: <Orders />,
+					},
+					{
+						path: "/Promos",
+						element: <Promos />,
+					},
+					{
+						path: "/Sales",
+						element: <Sales />,
 					},
 				],
 			},
