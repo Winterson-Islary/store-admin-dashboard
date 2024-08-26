@@ -23,6 +23,7 @@ import { useMutation } from "@tanstack/react-query";
 import {
 	Bell,
 	CircleUser,
+	Dot,
 	Home,
 	LineChart,
 	Menu,
@@ -33,6 +34,35 @@ import {
 	ShoppingCart,
 } from "lucide-react";
 import { Link, Navigate, Outlet, useLocation } from "react-router-dom";
+
+const navItems = [
+	{
+		name: "Dashboard",
+		to: "/",
+		icon: <Home className="h-4 w-4" />,
+	},
+	{
+		name: "Orders",
+		to: "/Orders",
+		icon: <ShoppingCart className="h-4 w-4" />,
+	},
+	{
+		name: "Products",
+		to: "/Products",
+		icon: <Package className="h-4 w-4" />,
+	},
+	{
+		name: "Promos",
+		to: "/Promos",
+		icon: <PartyPopper className="h-4 w-4" />,
+	},
+	{
+		name: "Sales",
+		to: "/Sales",
+		icon: <LineChart className="h-4 w-4" />,
+	},
+];
+
 const Dashboard = () => {
 	const { User, logout: StoreLogout } = useAuthStore();
 	const logoutMutation = useMutation({
@@ -47,33 +77,6 @@ const Dashboard = () => {
 	if (User === null) {
 		return <Navigate to="/auth/login" replace />;
 	}
-	const navItems = [
-		{
-			name: "Dashboard",
-			to: "/",
-			icon: <Home className="h-4 w-4" />,
-		},
-		{
-			name: "Orders",
-			to: "/Orders",
-			icon: <ShoppingCart className="h-4 w-4" />,
-		},
-		{
-			name: "Products",
-			to: "/Products",
-			icon: <Package className="h-4 w-4" />,
-		},
-		{
-			name: "Promos",
-			to: "/Promos",
-			icon: <PartyPopper className="h-4 w-4" />,
-		},
-		{
-			name: "Sales",
-			to: "/Sales",
-			icon: <LineChart className="h-4 w-4" />,
-		},
-	];
 
 	return (
 		<div className="grid min-h-screen w-full md:grid-cols-[220px_1fr] lg:grid-cols-[280px_1fr]">
@@ -173,17 +176,31 @@ const Dashboard = () => {
 							</div>
 						</SheetContent>
 					</Sheet>
-					<div className="w-full flex-1">
-						<form>
-							<div className="relative">
-								<Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
-								<Input
-									type="search"
-									placeholder="Search products..."
-									className="w-full appearance-none bg-background pl-8 shadow-none md:w-2/3 lg:w-1/3"
-								/>
-							</div>
-						</form>
+					<div className="w-full flex items-center gap-10">
+						<div className="flex items-center">
+							<Dot
+								height={40}
+								width={40}
+								className="text-green-400"
+							/>
+							<span className="-translate-x-2 text-sm font-medium pointer-events-none">
+								{User.role === "admin" || User.role === "super"
+									? "Global"
+									: User.tenant?.address}
+							</span>
+						</div>
+						<div className="flex-1">
+							<form>
+								<div className="relative">
+									<Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
+									<Input
+										type="search"
+										placeholder="Search products..."
+										className="w-full appearance-none bg-background pl-8 shadow-none md:w-2/3 lg:w-1/3"
+									/>
+								</div>
+							</form>
+						</div>
 					</div>
 					<DropdownMenu>
 						<DropdownMenuTrigger asChild>
