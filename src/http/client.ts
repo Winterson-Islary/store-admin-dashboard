@@ -1,7 +1,7 @@
 import type { OriginalRequest, SelfData, UserLoginData } from "@/lib/types";
 import { useAuthStore } from "@/store";
 import axios, { type AxiosError } from "axios";
-import { login, whoami } from "./api";
+import { getUsers, login, whoami } from "./api";
 
 const api = axios.create({
 	baseURL: import.meta.env.VITE_BACKEND_API_URL,
@@ -57,4 +57,8 @@ const GetSelf = async () => {
 	return data as SelfData;
 };
 
-export { api, LoginUser, GetSelf };
+const GetUsers = async () => {
+	const { data } = await getUsers();
+	return data;
+};
+export { api, LoginUser, GetSelf, GetUsers };

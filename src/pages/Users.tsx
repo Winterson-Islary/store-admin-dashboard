@@ -14,10 +14,16 @@ import {
 	TableHeader,
 	TableRow,
 } from "@/components/ui/table";
+import { GetUsers } from "@/http/client";
+import { useQuery } from "@tanstack/react-query";
 import { List } from "lucide-react";
 import { Link } from "react-router-dom";
 
 export const Users = () => {
+	const userQuery = useQuery({
+		queryKey: ["users"],
+		queryFn: GetUsers,
+	});
 	return (
 		<div>
 			<Breadcrumb className="p-5">
