@@ -31,7 +31,7 @@ import {
 	Package2,
 	PartyPopper,
 	Search,
-	ShoppingCart,
+	Users,
 } from "lucide-react";
 import { Link, Navigate, Outlet, useLocation } from "react-router-dom";
 
@@ -44,7 +44,7 @@ const navItems = [
 	{
 		name: "Users",
 		to: "/users",
-		icon: <ShoppingCart className="h-4 w-4" />,
+		icon: <Users className="h-4 w-4" />,
 	},
 	{
 		name: "Restaurants",
