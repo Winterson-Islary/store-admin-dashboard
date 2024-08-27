@@ -37,29 +37,29 @@ import { Link, Navigate, Outlet, useLocation } from "react-router-dom";
 
 const navItems = [
 	{
-		name: "Dashboard",
+		name: "Home",
 		to: "/",
 		icon: <Home className="h-4 w-4" />,
 	},
 	{
-		name: "Orders",
-		to: "/Orders",
+		name: "Users",
+		to: "/users",
 		icon: <ShoppingCart className="h-4 w-4" />,
 	},
 	{
+		name: "Restaurants",
+		to: "/restaurants",
+		icon: <LineChart className="h-4 w-4" />,
+	},
+	{
 		name: "Products",
-		to: "/Products",
+		to: "/products",
 		icon: <Package className="h-4 w-4" />,
 	},
 	{
 		name: "Promos",
-		to: "/Promos",
+		to: "/promos",
 		icon: <PartyPopper className="h-4 w-4" />,
-	},
-	{
-		name: "Sales",
-		to: "/Sales",
-		icon: <LineChart className="h-4 w-4" />,
 	},
 ];
 

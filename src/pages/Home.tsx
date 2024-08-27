@@ -1,4 +1,11 @@
 import {
+	Breadcrumb,
+	BreadcrumbItem,
+	BreadcrumbLink,
+	BreadcrumbList,
+	BreadcrumbSeparator,
+} from "@/components/ui/breadcrumb";
+import {
 	Card,
 	CardContent,
 	CardDescription,
@@ -16,11 +23,27 @@ import {
 } from "@/components/ui/table";
 import { useAuthStore } from "@/store";
 import { BarChart4, Gift, Logs } from "lucide-react";
+import { Link } from "react-router-dom";
 
 const Home = () => {
 	const { User } = useAuthStore();
 	return (
 		<ScrollArea className="h-screen w-full">
+			<Breadcrumb className="p-5">
+				<BreadcrumbList>
+					<BreadcrumbItem>
+						<BreadcrumbLink asChild>
+							<Link to="/">Dashboard</Link>
+						</BreadcrumbLink>
+					</BreadcrumbItem>
+					<BreadcrumbSeparator />
+					<BreadcrumbItem>
+						<BreadcrumbLink asChild>
+							<Link to="/">Home</Link>
+						</BreadcrumbLink>
+					</BreadcrumbItem>
+				</BreadcrumbList>
+			</Breadcrumb>
 			<div className="flex flex-col  h-screen w-full  p-2 ">
 				<h1 className="text-lg font-bold md:text-3xl mt-5 px-7">
 					Welcome, {User?.name}

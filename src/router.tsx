@@ -5,9 +5,9 @@ import LoginPage from "@/pages/login/login";
 import { createBrowserRouter } from "react-router-dom";
 import NoAuth from "./layouts/NoAuth";
 import Root from "./layouts/Root";
-import { Orders } from "./pages/Orders";
 import { Promos } from "./pages/Promos";
-import { Sales } from "./pages/Sales";
+import { Restaurants } from "./pages/Restaurants";
+import { Users } from "./pages/Users";
 
 export const router = createBrowserRouter([
 	{
@@ -27,16 +27,16 @@ export const router = createBrowserRouter([
 						element: <Products />,
 					},
 					{
-						path: "/Orders",
-						element: <Orders />,
+						path: "/users",
+						element: <Users />,
 					},
 					{
-						path: "/Promos",
+						path: "/promos",
 						element: <Promos />,
 					},
 					{
-						path: "/Sales",
-						element: <Sales />,
+						path: "/restaurants",
+						element: <Restaurants />,
 					},
 				],
 			},

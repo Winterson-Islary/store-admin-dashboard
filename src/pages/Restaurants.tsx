@@ -7,7 +7,7 @@ import {
 } from "@/components/ui/breadcrumb";
 import { Link } from "react-router-dom";
 
-export const Promos = () => {
+export const Restaurants = () => {
 	return (
 		<>
 			<Breadcrumb className="p-5">
@@ -20,12 +20,12 @@ export const Promos = () => {
 					<BreadcrumbSeparator />
 					<BreadcrumbItem>
 						<BreadcrumbLink asChild>
-							<Link to="/promos">Promos</Link>
+							<Link to="/restaurants">Restaurants</Link>
 						</BreadcrumbLink>
 					</BreadcrumbItem>
 				</BreadcrumbList>
 			</Breadcrumb>
-			<h2>Welcome to Promos Page</h2>
+			<h2>Welcome to Restaurants Page</h2>
 		</>
 	);
 };
