@@ -14,6 +14,16 @@ const TenantSchema = z.object({
 	createdAt: z.number(),
 	updatedAt: z.number(),
 });
+const UsersSchema = z.object({
+	id: z.number(),
+	role: z.string(),
+	name: z.string(),
+	email: z.string().email(),
+	tenant: TenantSchema.optional(),
+	createdAt: z.number(),
+	isActive: z.boolean(),
+});
+
 const SelfDataSchema = z.object({
 	id: z.number(),
 	role: z.string(),
@@ -23,6 +33,7 @@ const SelfDataSchema = z.object({
 
 export type UserLoginData = z.infer<typeof UserLoginDataSchema>;
 export type SelfData = z.infer<typeof SelfDataSchema>;
+export type UsersData = z.infer<typeof UsersSchema>;
 
 export type OriginalRequest =
 	| ({ isRetry?: boolean } & InternalAxiosRequestConfig)

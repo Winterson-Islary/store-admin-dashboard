@@ -15,6 +15,7 @@ import {
 	TableRow,
 } from "@/components/ui/table";
 import { GetUsers } from "@/http/client";
+import type { UsersData } from "@/lib/types";
 import { useQuery } from "@tanstack/react-query";
 import { List } from "lucide-react";
 import { Link } from "react-router-dom";
@@ -24,6 +25,12 @@ export const Users = () => {
 		queryKey: ["users"],
 		queryFn: GetUsers,
 	});
+	if (userQuery.isLoading) {
+		return <div>Loading...</div>;
+	}
+	const usersData: UsersData[] = !userQuery.isError
+		? userQuery.data.users
+		: [];
 	return (
 		<div>
 			<Breadcrumb className="p-5">
@@ -64,13 +71,23 @@ export const Users = () => {
 							</TableRow>
 						</TableHeader>
 						<TableBody>
-							<TableRow>
-								<TableCell>RAHUL</TableCell>
-								<TableCell>ACTIVE</TableCell>
-								<TableCell>ADMIN</TableCell>
-								<TableCell>admin@gmail.com</TableCell>
-								<TableCell>20 July, 2024</TableCell>
-							</TableRow>
+							{usersData.map((user) => (
+								<TableRow key={user.id}>
+									<TableCell>{user.name}</TableCell>
+									<TableCell>
+										{user.isActive ? "ACTIVE" : "INACTIVE"}
+									</TableCell>
+									<TableCell>{user.role}</TableCell>
+									<TableCell>{user.email}</TableCell>
+									<TableCell>
+										{
+											user.createdAt
+												.toString()
+												.split("T")[0]
+										}
+									</TableCell>
+								</TableRow>
+							))}
 						</TableBody>
 					</Table>
 				</section>
