@@ -16,11 +16,19 @@ import {
 } from "@/components/ui/table";
 import { GetUsers } from "@/http/client";
 import type { UsersData } from "@/lib/types";
+import { useAuthStore } from "@/store";
 import { useQuery } from "@tanstack/react-query";
 import { List } from "lucide-react";
-import { Link } from "react-router-dom";
+import { Link, Navigate } from "react-router-dom";
 
 export const Users = () => {
+	const { User } = useAuthStore();
+	if (User === null) {
+		return <Navigate to="/auth/login" replace />;
+	}
+	if (User.role !== "admin" && User.role !== "super") {
+		return <Navigate to="/" replace />;
+	}
 	const userQuery = useQuery({
 		queryKey: ["users"],
 		queryFn: GetUsers,

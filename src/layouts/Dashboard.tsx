@@ -35,34 +35,6 @@ import {
 } from "lucide-react";
 import { Link, Navigate, Outlet, useLocation } from "react-router-dom";
 
-const navItems = [
-	{
-		name: "Home",
-		to: "/",
-		icon: <Home className="h-4 w-4" />,
-	},
-	{
-		name: "Users",
-		to: "/users",
-		icon: <Users className="h-4 w-4" />,
-	},
-	{
-		name: "Restaurants",
-		to: "/restaurants",
-		icon: <LineChart className="h-4 w-4" />,
-	},
-	{
-		name: "Products",
-		to: "/products",
-		icon: <Package className="h-4 w-4" />,
-	},
-	{
-		name: "Promos",
-		to: "/promos",
-		icon: <PartyPopper className="h-4 w-4" />,
-	},
-];
-
 const Dashboard = () => {
 	const { User, logout: StoreLogout } = useAuthStore();
 	const logoutMutation = useMutation({
@@ -77,7 +49,7 @@ const Dashboard = () => {
 	if (User === null) {
 		return <Navigate to="/auth/login" replace />;
 	}
-
+	const navItems = GetMenuItems(User.role);
 	return (
 		<div className="grid min-h-screen w-full md:grid-cols-[220px_1fr] lg:grid-cols-[280px_1fr] fixed">
 			<div className="hidden border-r bg-muted/40 md:block">
@@ -265,4 +237,42 @@ const NavBarItem = ({
 			{label}
 		</Link>
 	);
+};
+
+const GetMenuItems = (
+	role: string,
+): { name: string; to: string; icon: JSX.Element }[] => {
+	const navItems = [
+		{
+			name: "Home",
+			to: "/",
+			icon: <Home className="h-4 w-4" />,
+		},
+		{
+			name: "Users",
+			to: "/users",
+			icon: <Users className="h-4 w-4" />,
+		},
+		{
+			name: "Restaurants",
+			to: "/restaurants",
+			icon: <LineChart className="h-4 w-4" />,
+		},
+		{
+			name: "Products",
+			to: "/products",
+			icon: <Package className="h-4 w-4" />,
+		},
+		{
+			name: "Promos",
+			to: "/promos",
+			icon: <PartyPopper className="h-4 w-4" />,
+		},
+	];
+
+	if (role !== "admin" && role !== "super") {
+		navItems.splice(1, 1);
+	}
+
+	return navItems;
 };
