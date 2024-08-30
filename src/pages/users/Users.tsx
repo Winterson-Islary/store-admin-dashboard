@@ -20,7 +20,7 @@ import { useAuthStore } from "@/store";
 import { useQuery } from "@tanstack/react-query";
 import { List } from "lucide-react";
 import { Link, Navigate } from "react-router-dom";
-import UsersFilter from "./usersFilter";
+import UsersFilter from "./UsersFilter";
 
 export const Users = () => {
 	const { User } = useAuthStore();
@@ -58,7 +58,7 @@ export const Users = () => {
 				</BreadcrumbList>
 			</Breadcrumb>
 			<main className="px-5">
-				<section className=" xl:w-[70%] mx-auto">
+				<section className=" 2xl:w-[70%] mx-auto">
 					<CardHeader className="px-0">
 						<CardTitle className="flex gap-2 items-center uppercase">
 							{" "}
@@ -69,7 +69,11 @@ export const Users = () => {
 							List of registered users
 						</CardDescription>
 					</CardHeader>
-					<UsersFilter />
+					<UsersFilter
+						onFilterChange={(filterName, value) => {
+							console.log(filterName, value);
+						}}
+					/>
 					<Table>
 						<TableHeader>
 							<TableRow>

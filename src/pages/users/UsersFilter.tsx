@@ -22,12 +22,16 @@ import {
 	SelectTrigger,
 	SelectValue,
 } from "@/components/ui/select";
-import { type CreateUserData, CreateUserSchema } from "@/lib/types";
+import {
+	type CreateUserData,
+	CreateUserSchema,
+	type TFilterChange,
+} from "@/lib/types";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Plus, Search } from "lucide-react";
 import { useForm } from "react-hook-form";
 
-const UsersFilter = () => {
+const UsersFilter = ({ onFilterChange }: TFilterChange) => {
 	const form = useForm<CreateUserData>({
 		resolver: zodResolver(CreateUserSchema),
 		defaultValues: {
@@ -41,7 +45,7 @@ const UsersFilter = () => {
 		console.log("Inside on Submit: ", values);
 	};
 	return (
-		<div className="mb-2 flex justify-between">
+		<div className="mb-2 flex gap-5 justify-between">
 			<div className="flex gap-2">
 				<div className="relative">
 					<Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
@@ -49,24 +53,37 @@ const UsersFilter = () => {
 						type="search"
 						placeholder="Search User"
 						className="appearance-none bg-background pl-8 shadow-none w-[200px]"
+						onChange={(e) =>
+							onFilterChange("searchFilter", e.target.value)
+						}
 					/>
 				</div>
 				<div className="flex gap-2">
-					<Select>
+					<Select
+						onValueChange={(value) =>
+							onFilterChange("roleFilter", value)
+						}
+					>
 						<SelectTrigger className="w-[150px]">
 							<SelectValue placeholder="ROLE" />
 						</SelectTrigger>
 						<SelectContent>
+							<SelectItem value="none">ROLE</SelectItem>
 							<SelectItem value="admin">ADMIN</SelectItem>
 							<SelectItem value="manager">MANAGER</SelectItem>
 							<SelectItem value="customer">CUSTOMER</SelectItem>
 						</SelectContent>
 					</Select>
-					<Select>
+					<Select
+						onValueChange={(value) =>
+							onFilterChange("statusFilter", value)
+						}
+					>
 						<SelectTrigger className="w-[150px]">
 							<SelectValue placeholder="STATUS" />
 						</SelectTrigger>
 						<SelectContent>
+							<SelectItem value="none">STATUS</SelectItem>
 							<SelectItem value="active">ACTIVE</SelectItem>
 							<SelectItem value="inactive">INACTIVE</SelectItem>
 						</SelectContent>
@@ -76,7 +93,7 @@ const UsersFilter = () => {
 			<div>
 				<Dialog>
 					<DialogTrigger>
-						<div className="text-black bg-[#dff265] hover:bg-[#daed62] flex gap-1 px-3 py-1 rounded-md items-center text-base">
+						<div className="text-black  bg-[#dff265] hover:bg-[#daed62] flex gap-1 px-3 py-[0.35em] rounded-md items-center text-base w-[150px]">
 							<Plus width={13} height={13} />{" "}
 							<span>CREATE USER</span>
 						</div>

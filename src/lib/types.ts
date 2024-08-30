@@ -1,6 +1,9 @@
 import type { InternalAxiosRequestConfig } from "axios";
 import { z } from "zod";
 
+export type TFilterChange = {
+	onFilterChange: (filterName: string, value: string) => void;
+};
 const UserLoginDataSchema = z.object({
 	email: z.string().email(),
 	password: z.string().min(8),
