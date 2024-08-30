@@ -14,8 +14,14 @@ import {
 	DropdownMenuSeparator,
 	DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { Input } from "@/components/ui/input";
-import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
+import {
+	Sheet,
+	SheetContent,
+	SheetDescription,
+	SheetHeader,
+	SheetTitle,
+	SheetTrigger,
+} from "@/components/ui/sheet";
 import { logout } from "@/http/api";
 import { cn } from "@/lib/utils";
 import { useAuthStore } from "@/store";
@@ -106,6 +112,12 @@ const Dashboard = () => {
 			<div className="flex flex-col">
 				<header className="flex h-14 items-center gap-4 border-b bg-muted/40 px-4 lg:h-[60px] lg:px-6">
 					<Sheet>
+						<SheetHeader>
+							<SheetTitle hidden>Navbar</SheetTitle>
+							<SheetDescription hidden>
+								Navbar Container
+							</SheetDescription>
+						</SheetHeader>
 						<SheetTrigger asChild>
 							<Button
 								variant="outline"
@@ -160,18 +172,6 @@ const Dashboard = () => {
 									? "Global"
 									: User.tenant?.address}
 							</span>
-						</div>
-						<div className="flex-1">
-							<form>
-								<div className="relative">
-									<Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
-									<Input
-										type="search"
-										placeholder="Search products..."
-										className="w-full appearance-none bg-background pl-8 shadow-none md:w-2/3 lg:w-1/3"
-									/>
-								</div>
-							</form>
 						</div>
 					</div>
 					<DropdownMenu>

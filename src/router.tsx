@@ -7,7 +7,7 @@ import NoAuth from "./layouts/NoAuth";
 import Root from "./layouts/Root";
 import { Promos } from "./pages/Promos";
 import { Restaurants } from "./pages/Restaurants";
-import { Users } from "./pages/Users";
+import { Users } from "./pages/users/Users";
 
 export const router = createBrowserRouter([
 	{

@@ -20,6 +20,7 @@ import { useAuthStore } from "@/store";
 import { useQuery } from "@tanstack/react-query";
 import { List } from "lucide-react";
 import { Link, Navigate } from "react-router-dom";
+import UsersFilter from "./usersFilter";
 
 export const Users = () => {
 	const { User } = useAuthStore();
@@ -68,6 +69,7 @@ export const Users = () => {
 							List of registered users
 						</CardDescription>
 					</CardHeader>
+					<UsersFilter />
 					<Table>
 						<TableHeader>
 							<TableRow>

@@ -23,7 +23,12 @@ const UsersSchema = z.object({
 	createdAt: z.number(),
 	isActive: z.boolean(),
 });
-
+export const CreateUserSchema = z.object({
+	name: z.string(),
+	role: z.enum(["customer", "admin", "manager"]).default("customer"),
+	email: z.string().email(),
+	tenant: TenantSchema.optional(),
+});
 const SelfDataSchema = z.object({
 	id: z.number(),
 	role: z.string(),
@@ -34,7 +39,7 @@ const SelfDataSchema = z.object({
 export type UserLoginData = z.infer<typeof UserLoginDataSchema>;
 export type SelfData = z.infer<typeof SelfDataSchema>;
 export type UsersData = z.infer<typeof UsersSchema>;
-
+export type CreateUserData = z.infer<typeof CreateUserSchema>;
 export type OriginalRequest =
 	| ({ isRetry?: boolean } & InternalAxiosRequestConfig)
 	| undefined;
