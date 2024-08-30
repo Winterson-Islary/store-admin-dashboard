@@ -43,6 +43,7 @@ import { Link, Navigate, Outlet, useLocation } from "react-router-dom";
 
 const Dashboard = () => {
 	const { User, logout: StoreLogout } = useAuthStore();
+	const location = useLocation();
 	const logoutMutation = useMutation({
 		mutationKey: ["logout"],
 		mutationFn: logout,
@@ -53,7 +54,12 @@ const Dashboard = () => {
 	});
 
 	if (User === null) {
-		return <Navigate to="/auth/login" replace />;
+		return (
+			<Navigate
+				to={`/auth/login?returnTo=${location.pathname}`}
+				replace
+			/>
+		);
 	}
 	const navItems = GetMenuItems(User.role);
 	return (
