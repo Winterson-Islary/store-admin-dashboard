@@ -6,7 +6,7 @@ export type TFilterChange = {
 };
 const UserLoginDataSchema = z.object({
 	email: z.string().email(),
-	password: z.string().min(8),
+	password: z.string(),
 	remember: z.boolean().default(false),
 });
 
@@ -27,10 +27,14 @@ const UsersSchema = z.object({
 	isActive: z.boolean(),
 });
 export const CreateUserSchema = z.object({
-	name: z.string(),
+	name: z
+		.string()
+		.min(1, "Name cannot be empty")
+		.max(100, "Name cannot be more than 100 characters long"),
 	role: z.enum(["customer", "admin", "manager"]).default("customer"),
+	password: z.string().min(8, "Password must be of at least 8 characters"),
 	email: z.string().email(),
-	tenant: TenantSchema.optional(),
+	tenant: z.string().optional(),
 });
 const SelfDataSchema = z.object({
 	id: z.number(),

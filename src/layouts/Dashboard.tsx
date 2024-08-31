@@ -36,7 +36,6 @@ import {
 	Package,
 	Package2,
 	PartyPopper,
-	Search,
 	Users,
 } from "lucide-react";
 import { Link, Navigate, Outlet, useLocation } from "react-router-dom";

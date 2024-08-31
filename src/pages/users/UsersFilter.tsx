@@ -15,6 +15,7 @@ import {
 	FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 import {
 	Select,
 	SelectContent,
@@ -29,20 +30,30 @@ import {
 } from "@/lib/types";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Plus, Search } from "lucide-react";
+import { useRef, useState } from "react";
 import { useForm } from "react-hook-form";
 
 const UsersFilter = ({ onFilterChange }: TFilterChange) => {
+	const [passwordMatch, setPasswordMatch] = useState<boolean>(true);
+	const passwordRef = useRef<HTMLInputElement>(null);
 	const form = useForm<CreateUserData>({
 		resolver: zodResolver(CreateUserSchema),
 		defaultValues: {
 			name: "",
 			email: "",
+			password: "",
 			role: "customer",
 			tenant: undefined,
 		},
 	});
 	const onSubmit = (values: CreateUserData) => {
-		console.log("Inside on Submit: ", values);
+		const matchingPassword = passwordRef.current?.value === values.password;
+		matchingPassword ? setPasswordMatch(true) : setPasswordMatch(false);
+		if (!matchingPassword) {
+			console.log("Passwords do not match");
+			return;
+		}
+		console.log("Inside on Submit Success: ", values);
 	};
 	return (
 		<div className="mb-2 flex gap-5 justify-between">
@@ -100,9 +111,9 @@ const UsersFilter = ({ onFilterChange }: TFilterChange) => {
 					</DialogTrigger>
 					<DialogContent>
 						<DialogHeader>
-							<DialogTitle>CREATE</DialogTitle>
+							<DialogTitle>CREATE NEW USER</DialogTitle>
 							<DialogDescription>
-								Create new user.
+								Provide valid user info for user creation
 							</DialogDescription>
 						</DialogHeader>
 						<Form {...form}>
@@ -118,11 +129,16 @@ const UsersFilter = ({ onFilterChange }: TFilterChange) => {
 										render={({ field }) => (
 											<FormItem>
 												<FormControl>
-													<Input
-														type="text"
-														placeholder="Username"
-														{...field}
-													/>
+													<div className=" grid w-full items-center gap-1.5">
+														<Label htmlFor="name">
+															Name
+														</Label>
+														<Input
+															id="name"
+															type="text"
+															{...field}
+														/>
+													</div>
 												</FormControl>
 												<FormMessage />
 											</FormItem>
@@ -134,50 +150,146 @@ const UsersFilter = ({ onFilterChange }: TFilterChange) => {
 										render={({ field }) => (
 											<FormItem>
 												<FormControl>
-													<Input
-														type="text"
-														placeholder="Email"
-														{...field}
-													/>
+													<div className="grid w-full items-center gap-1.5">
+														<Label htmlFor="email">
+															Email
+														</Label>
+														<Input
+															id="email"
+															type="text"
+															{...field}
+														/>
+													</div>
 												</FormControl>
 												<FormMessage />
 											</FormItem>
 										)}
 									/>
+									<section className="flex gap-5">
+										<FormField
+											control={form.control}
+											name="role"
+											render={({ field }) => (
+												<FormItem>
+													<FormControl>
+														<div className="grid w-full max-w-sm items-center gap-1.5">
+															<Label htmlFor="role">
+																Role
+															</Label>
+															<Select
+																onValueChange={
+																	field.onChange
+																}
+																defaultValue="customer"
+															>
+																<SelectTrigger
+																	id="role"
+																	className="w-[150px]"
+																>
+																	<SelectValue placeholder="ROLE" />
+																</SelectTrigger>
+																<SelectContent>
+																	<SelectItem value="admin">
+																		ADMIN
+																	</SelectItem>
+																	<SelectItem value="manager">
+																		MANAGER
+																	</SelectItem>
+																	<SelectItem value="customer">
+																		CUSTOMER
+																	</SelectItem>
+																</SelectContent>
+															</Select>
+														</div>
+													</FormControl>
+													<FormMessage />
+												</FormItem>
+											)}
+										/>
+										<FormField
+											control={form.control}
+											name="tenant"
+											render={({ field }) => (
+												<FormItem className="flex-grow">
+													<FormControl>
+														<div className="grid w-full max-w-sm items-center gap-1.5">
+															<Label htmlFor="tenant">
+																Tenant
+															</Label>
+															<Select
+																onValueChange={
+																	field.onChange
+																}
+															>
+																<SelectTrigger
+																	id="tenant"
+																	className="w-full"
+																>
+																	<SelectValue placeholder="Choose Tenant" />
+																</SelectTrigger>
+																<SelectContent>
+																	<SelectItem
+																		className="text-muted-foreground"
+																		value="none"
+																	>
+																		None
+																	</SelectItem>
+																	<SelectItem value="tenant1">
+																		Tenant 1
+																	</SelectItem>
+																	<SelectItem value="tenant2">
+																		Tenant 2
+																	</SelectItem>
+																	<SelectItem value="tenant3">
+																		Tenant 3
+																	</SelectItem>
+																</SelectContent>
+															</Select>
+														</div>
+													</FormControl>
+												</FormItem>
+											)}
+										/>
+									</section>
 									<FormField
 										control={form.control}
-										name="role"
+										name="password"
 										render={({ field }) => (
 											<FormItem>
 												<FormControl>
-													<Select
-														onValueChange={
-															field.onChange
-														}
-														defaultValue="customer"
-													>
-														<SelectTrigger className="w-[150px]">
-															<SelectValue placeholder="ROLE" />
-														</SelectTrigger>
-														<SelectContent>
-															<SelectItem value="admin">
-																ADMIN
-															</SelectItem>
-															<SelectItem value="manager">
-																MANAGER
-															</SelectItem>
-															<SelectItem value="customer">
-																CUSTOMER
-															</SelectItem>
-														</SelectContent>
-													</Select>
+													<div className="grid w-full items-center gap-1.5">
+														<Label htmlFor="password">
+															Password
+														</Label>
+														<Input
+															id="password"
+															type="password"
+															{...field}
+														/>
+													</div>
 												</FormControl>
 												<FormMessage />
 											</FormItem>
 										)}
 									/>
-
-									<Button type="submit">SUBMIT</Button>
+									<div className="grid w-full items-center gap-1.5">
+										<Label htmlFor="retype-password">
+											Confirm Password
+										</Label>
+										<Input
+											ref={passwordRef}
+											id="retype-password"
+											type="password"
+										/>
+										{!passwordMatch && (
+											<p className="text-destructive font-semibold text-[0.820rem]">
+												Passwords do not match
+											</p>
+										)}
+									</div>
+									<Button type="submit" className="mt-5">
+										SUBMIT
+									</Button>
 								</section>
 							</form>
 						</Form>
