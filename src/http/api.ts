@@ -6,3 +6,4 @@ export const login = async (Data: UserLoginData) =>
 export const getUsers = async () => api.get("/users");
 export const whoami = async () => api.get("/auth/whoami");
 export const logout = async () => api.post("/auth/logout");
+export const getTenants = async () => api.get("/tenants/getAll");
