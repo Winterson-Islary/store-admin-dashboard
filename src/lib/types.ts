@@ -46,6 +46,7 @@ const SelfDataSchema = z.object({
 export type UserLoginData = z.infer<typeof UserLoginDataSchema>;
 export type SelfData = z.infer<typeof SelfDataSchema>;
 export type UsersData = z.infer<typeof UsersSchema>;
+export type Tenants = z.infer<typeof TenantSchema>;
 export type CreateUserData = z.infer<typeof CreateUserSchema>;
 export type OriginalRequest =
 	| ({ isRetry?: boolean } & InternalAxiosRequestConfig)

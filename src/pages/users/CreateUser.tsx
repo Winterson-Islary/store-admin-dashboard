@@ -23,8 +23,14 @@ import {
 	SelectTrigger,
 	SelectValue,
 } from "@/components/ui/select";
-import { type CreateUserData, CreateUserSchema } from "@/lib/types";
+import { getTenants } from "@/http/api";
+import {
+	type CreateUserData,
+	CreateUserSchema,
+	type Tenants,
+} from "@/lib/types";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useQuery } from "@tanstack/react-query";
 import { Plus } from "lucide-react";
 import { useRef, useState } from "react";
 import { useForm } from "react-hook-form";
@@ -40,6 +46,13 @@ const CreateUser = () => {
 			password: "",
 		},
 	});
+	const createUserQuery = useQuery<{ data: Tenants[] }>({
+		queryKey: ["create"],
+		queryFn: () => {
+			return getTenants().then((res) => res.data);
+		},
+	});
+	console.log("Tenants List: ", createUserQuery.data?.data); //! LOG FOR DEBUGGING PURPOSES
 	const onSubmit = (values: CreateUserData) => {
 		if (values.tenant === "none") {
 			values.tenant = undefined;
@@ -47,10 +60,10 @@ const CreateUser = () => {
 		const matchingPassword = passwordRef.current?.value === values.password;
 		matchingPassword ? setPasswordMatch(true) : setPasswordMatch(false);
 		if (!matchingPassword) {
-			console.log("Passwords do not match");
+			console.log("Passwords do not match"); //! REMOVE LOG
 			return;
 		}
-		console.log("Inside on Submit Success: ", values);
+		console.log("Inside on Submit Success: ", values); //! REMOVE LOG
 	};
 	return (
 		<div>
@@ -180,21 +193,31 @@ const CreateUser = () => {
 																<SelectValue placeholder="Select a Tenant" />
 															</SelectTrigger>
 															<SelectContent>
-																<SelectItem
-																	className="text-muted-foreground"
-																	value="none"
-																>
-																	None
-																</SelectItem>
-																<SelectItem value="tenant1">
-																	Tenant 1
-																</SelectItem>
-																<SelectItem value="tenant2">
-																	Tenant 2
-																</SelectItem>
-																<SelectItem value="tenant3">
-																	Tenant 3
-																</SelectItem>
+																{createUserQuery.isLoading ? (
+																	<SelectItem value="none">
+																		Loading...
+																	</SelectItem>
+																) : (
+																	<>
+																		<SelectItem
+																			className="text-muted-foreground"
+																			value="none"
+																		>
+																			None
+																		</SelectItem>
+																		{createUserQuery
+																			.data
+																			?.data && (
+																			<TenantsList
+																				tenants={
+																					createUserQuery
+																						.data
+																						.data
+																				}
+																			/>
+																		)}
+																	</>
+																)}
 															</SelectContent>
 														</Select>
 													</div>
@@ -239,7 +262,11 @@ const CreateUser = () => {
 										</p>
 									)}
 								</div>
-								<Button type="submit" className="mt-5">
+								<Button
+									type="submit"
+									className="mt-5"
+									disabled={createUserQuery.isLoading}
+								>
 									SUBMIT
 								</Button>
 							</section>
@@ -252,3 +279,12 @@ const CreateUser = () => {
 };
 
 export default CreateUser;
+
+// Tenants List Display Component
+const TenantsList = ({ tenants }: { tenants: Tenants[] }) => {
+	return tenants.map((tenant) => (
+		<SelectItem key={tenant.name} value={`${tenant.id}`}>
+			{tenant.name}
+		</SelectItem>
+	));
+};
