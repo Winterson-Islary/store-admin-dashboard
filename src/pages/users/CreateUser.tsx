@@ -54,8 +54,8 @@ const CreateUser = () => {
 	});
 	console.log("Tenants List: ", createUserQuery.data?.data); //! LOG FOR DEBUGGING PURPOSES
 	const onSubmit = (values: CreateUserData) => {
-		if (values.tenant === "none") {
-			values.tenant = undefined;
+		if (values.tenantId === "none") {
+			values.tenantId = undefined;
 		}
 		const matchingPassword = passwordRef.current?.value === values.password;
 		matchingPassword ? setPasswordMatch(true) : setPasswordMatch(false);
@@ -172,7 +172,7 @@ const CreateUser = () => {
 									/>
 									<FormField
 										control={form.control}
-										name="tenant"
+										name="tenantId"
 										render={({ field }) => (
 											<FormItem className="flex-grow">
 												<FormControl>

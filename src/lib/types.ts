@@ -34,7 +34,7 @@ export const CreateUserSchema = z.object({
 	role: z.enum(["customer", "admin", "manager"]).default("customer"),
 	password: z.string().min(8, "Password must be of at least 8 characters"),
 	email: z.string().email(),
-	tenant: z.string().optional(),
+	tenantId: z.string().optional(),
 });
 const SelfDataSchema = z.object({
 	id: z.number(),
