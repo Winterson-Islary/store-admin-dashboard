@@ -23,19 +23,21 @@ import {
 	SelectTrigger,
 	SelectValue,
 } from "@/components/ui/select";
-import { getTenants } from "@/http/api";
+import { createUser, getTenants } from "@/http/api";
 import {
 	type CreateUserData,
 	CreateUserSchema,
 	type Tenants,
 } from "@/lib/types";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { Plus } from "lucide-react";
 import { useRef, useState } from "react";
 import { useForm } from "react-hook-form";
 
 const CreateUser = () => {
+	const [dialogOpen, setDialogOpen] = useState(false);
+	const queryClient = useQueryClient();
 	const [passwordMatch, setPasswordMatch] = useState<boolean>(true);
 	const passwordRef = useRef<HTMLInputElement>(null);
 	const form = useForm<CreateUserData>({
@@ -47,13 +49,22 @@ const CreateUser = () => {
 		},
 	});
 	const createUserQuery = useQuery<{ data: Tenants[] }>({
-		queryKey: ["create"],
+		queryKey: ["tenants"],
 		queryFn: () => {
 			return getTenants().then((res) => res.data);
 		},
 	});
+	const createUserMutation = useMutation({
+		mutationKey: ["usersMutate"],
+		mutationFn: createUser,
+		onSuccess: async () => {
+			await queryClient.invalidateQueries({ queryKey: ["users"] });
+			return;
+		},
+	});
+
 	console.log("Tenants List: ", createUserQuery.data?.data); //! LOG FOR DEBUGGING PURPOSES
-	const onSubmit = (values: CreateUserData) => {
+	const onSubmit = async (values: CreateUserData) => {
 		if (values.tenantId === "none") {
 			values.tenantId = undefined;
 		}
@@ -64,10 +75,11 @@ const CreateUser = () => {
 			return;
 		}
 		console.log("Inside on Submit Success: ", values); //! REMOVE LOG
+		await createUserMutation.mutate(values);
 	};
 	return (
 		<div>
-			<Dialog>
+			<Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
 				<DialogTrigger>
 					<div className="text-black  bg-[#dff265] hover:bg-[#daed62] flex gap-1 px-3 py-[0.35em] rounded-md items-center text-base w-[150px]">
 						<Plus width={13} height={13} /> <span>CREATE USER</span>
@@ -84,6 +96,7 @@ const CreateUser = () => {
 						<form
 							onSubmit={form.handleSubmit((values) => {
 								onSubmit(values);
+								setDialogOpen((prev) => !prev);
 							})}
 						>
 							<section className="flex flex-col gap-3">

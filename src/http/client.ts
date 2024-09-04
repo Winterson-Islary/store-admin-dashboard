@@ -1,7 +1,12 @@
-import type { OriginalRequest, SelfData, UserLoginData } from "@/lib/types";
+import type {
+	CreateUserData,
+	OriginalRequest,
+	SelfData,
+	UserLoginData,
+} from "@/lib/types";
 import { useAuthStore } from "@/store";
 import axios, { type AxiosError } from "axios";
-import { getUsers, login, whoami } from "./api";
+import { createUser, getUsers, login, whoami } from "./api";
 
 const api = axios.create({
 	baseURL: import.meta.env.VITE_BACKEND_API_URL,
@@ -61,4 +66,10 @@ const GetUsers = async () => {
 	const { data } = await getUsers();
 	return data;
 };
-export { api, LoginUser, GetSelf, GetUsers };
+
+const CreateUser = async (user: CreateUserData) => {
+	await createUser(user);
+	return;
+};
+
+export { api, LoginUser, GetSelf, GetUsers, CreateUser };
