@@ -59,6 +59,7 @@ const CreateUser = () => {
 		mutationFn: createUser,
 		onSuccess: async () => {
 			await queryClient.invalidateQueries({ queryKey: ["users"] });
+			console.log("Query Invalidated");
 			return;
 		},
 	});
