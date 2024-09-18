@@ -62,8 +62,8 @@ const GetSelf = async () => {
 	return data as SelfData;
 };
 
-const GetUsers = async () => {
-	const { data } = await getUsers();
+const GetUsers = async (queryString: string) => {
+	const { data } = await getUsers(queryString);
 	return data;
 };
 
