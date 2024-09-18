@@ -4,6 +4,11 @@ import { z } from "zod";
 export type TFilterChange = {
 	onFilterChange: (filterName: string, value: string) => void;
 };
+export type PaginationData = {
+	curPage: number;
+	perPage: number;
+	count: number;
+};
 const UserLoginDataSchema = z.object({
 	email: z.string().email(),
 	password: z.string(),

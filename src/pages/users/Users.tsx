@@ -19,10 +19,17 @@ import type { UsersData } from "@/lib/types";
 import { useAuthStore } from "@/store";
 import { useQuery } from "@tanstack/react-query";
 import { List } from "lucide-react";
+import { useState } from "react";
 import { Link, Navigate } from "react-router-dom";
+import UserPagination from "./UserPagination";
 import UsersFilter from "./UsersFilter";
 
 export const Users = () => {
+	const [pageState, setPageState] = useState({
+		curPage: 1,
+		perPage: 5,
+	});
+	console.log(pageState);
 	const { User } = useAuthStore();
 	if (User === null) {
 		return <Navigate to="/auth/login" replace />;
@@ -31,12 +38,19 @@ export const Users = () => {
 		return <Navigate to="/" replace />;
 	}
 	const userQuery = useQuery({
-		queryKey: ["users"],
-		queryFn: GetUsers,
+		queryKey: ["users", pageState],
+		queryFn: () => {
+			const queryString = new URLSearchParams(
+				//! USE BETTER CONVERSION METHOD
+				pageState as unknown as Record<string, string>,
+			).toString();
+			return GetUsers(queryString);
+		},
 	});
 	if (userQuery.isLoading) {
 		return <div>Loading...</div>;
 	}
+	console.log(userQuery.data);
 	const usersData: UsersData[] = !userQuery.isError
 		? userQuery.data.users
 		: [];
@@ -106,6 +120,12 @@ export const Users = () => {
 					</Table>
 				</section>
 			</main>
+			<section className="mt-5">
+				<UserPagination
+					usersData={userQuery.data}
+					setPageState={setPageState}
+				/>
+			</section>
 		</div>
 	);
 };
