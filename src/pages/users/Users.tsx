@@ -5,7 +5,9 @@ import {
 	BreadcrumbList,
 	BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb";
+
 import { CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+
 import {
 	Table,
 	TableBody,
@@ -14,14 +16,24 @@ import {
 	TableHeader,
 	TableRow,
 } from "@/components/ui/table";
+
 import { GetUsers } from "@/http/client";
+
 import type { UsersData } from "@/lib/types";
+
 import { useAuthStore } from "@/store";
+
 import { useQuery } from "@tanstack/react-query";
+
 import { List } from "lucide-react";
+
 import { useState } from "react";
+
 import { Link, Navigate } from "react-router-dom";
+
 import UserPagination from "./UserPagination";
+
+import { Skeleton } from "@/components/ui/skeleton";
 import UsersFilter from "./UsersFilter";
 
 export const Users = () => {
@@ -29,31 +41,47 @@ export const Users = () => {
 		curPage: 1,
 		perPage: 5,
 	});
+
 	console.log(pageState);
+
 	const { User } = useAuthStore();
+
 	if (User === null) {
 		return <Navigate to="/auth/login" replace />;
 	}
+
 	if (User.role !== "admin" && User.role !== "super") {
 		return <Navigate to="/" replace />;
 	}
+
 	const userQuery = useQuery({
 		queryKey: ["users", pageState],
+
 		queryFn: () => {
 			const queryString = new URLSearchParams(
 				//! USE BETTER CONVERSION METHOD
+
 				pageState as unknown as Record<string, string>,
 			).toString();
+
 			return GetUsers(queryString);
 		},
 	});
+
 	if (userQuery.isLoading) {
-		return <div>Loading...</div>;
+		return (
+			<div className="h-screen flex  justify-center">
+				<p className="text-2xl mt-20">Loading...</p>
+			</div>
+		);
 	}
+
 	console.log(userQuery.data);
+
 	const usersData: UsersData[] = !userQuery.isError
 		? userQuery.data.users
 		: [];
+
 	return (
 		<div>
 			<Breadcrumb className="p-5">
@@ -63,7 +91,9 @@ export const Users = () => {
 							<Link to="/">Dashboard</Link>
 						</BreadcrumbLink>
 					</BreadcrumbItem>
+
 					<BreadcrumbSeparator />
+
 					<BreadcrumbItem>
 						<BreadcrumbLink asChild>
 							<Link to="/users">Users</Link>
@@ -71,46 +101,68 @@ export const Users = () => {
 					</BreadcrumbItem>
 				</BreadcrumbList>
 			</Breadcrumb>
+
 			<main className="px-5">
 				<section className=" 2xl:w-[70%] mx-auto">
-					<CardHeader className="px-0">
-						<CardTitle className="flex gap-2 items-center uppercase">
-							{" "}
-							<List height={20} width={20} />
-							<span>Users List</span>
-						</CardTitle>
-						<CardDescription>
-							List of registered users
-						</CardDescription>
-					</CardHeader>
+					<header className="flex justify-between">
+						<CardHeader className="px-0">
+							<CardTitle className="flex gap-2 items-center uppercase">
+								{" "}
+								<List height={20} width={20} />
+								<span>Users List</span>
+							</CardTitle>
+
+							<CardDescription>
+								List of registered users
+							</CardDescription>
+						</CardHeader>
+						<section>
+							{userQuery.isError && (
+								<div>{userQuery.error.message}</div>
+							)}
+						</section>
+					</header>
+
 					<UsersFilter
 						onFilterChange={(filterName, value) => {
 							console.log(filterName, value);
 						}}
 					/>
+
 					<Table>
 						<TableHeader>
 							<TableRow>
 								<TableHead>Username</TableHead>
+
 								<TableHead>Status</TableHead>
+
 								<TableHead>Role</TableHead>
+
 								<TableHead>Email</TableHead>
+
 								<TableHead>Registration Date</TableHead>
 							</TableRow>
 						</TableHeader>
+
 						<TableBody>
 							{usersData.map((user) => (
 								<TableRow key={user.id}>
 									<TableCell>{user.name}</TableCell>
+
 									<TableCell>
 										{user.isActive ? "ACTIVE" : "INACTIVE"}
 									</TableCell>
+
 									<TableCell>{user.role}</TableCell>
+
 									<TableCell>{user.email}</TableCell>
+
 									<TableCell>
 										{
 											user.createdAt
+
 												.toString()
+
 												.split("T")[0]
 										}
 									</TableCell>
@@ -120,6 +172,7 @@ export const Users = () => {
 					</Table>
 				</section>
 			</main>
+
 			<section className="mt-5">
 				<UserPagination
 					usersData={userQuery.data}

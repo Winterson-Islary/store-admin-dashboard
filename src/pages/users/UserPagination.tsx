@@ -41,6 +41,7 @@ const UserPagination = ({
 								<PaginationLink
 									onClick={() => handleClick(1)}
 									isActive={curPage === 1}
+									className="cursor-pointer"
 								>
 									1
 								</PaginationLink>
@@ -49,6 +50,7 @@ const UserPagination = ({
 								{pages !== 2 && (
 									<PaginationLink
 										onClick={() => handleClick(2)}
+										className="cursor-pointer"
 									>
 										2
 									</PaginationLink>
@@ -58,6 +60,7 @@ const UserPagination = ({
 								{pages !== 3 && (
 									<PaginationLink
 										onClick={() => handleClick(3)}
+										className="cursor-pointer"
 									>
 										3
 									</PaginationLink>
@@ -80,6 +83,7 @@ const UserPagination = ({
 									<PaginationItem>
 										<PaginationLink
 											onClick={() => handleClick(1)}
+											className="cursor-pointer"
 										>
 											1
 										</PaginationLink>
@@ -94,6 +98,7 @@ const UserPagination = ({
 								{curPage - 2 > 0 && (
 									<PaginationLink
 										onClick={() => handleClick(curPage - 2)}
+										className="cursor-pointer"
 									>
 										{curPage - 2}
 									</PaginationLink>
@@ -102,6 +107,7 @@ const UserPagination = ({
 							<PaginationItem>
 								<PaginationLink
 									onClick={() => handleClick(curPage - 1)}
+									className="cursor-pointer"
 								>
 									{curPage - 1}
 								</PaginationLink>
@@ -110,6 +116,7 @@ const UserPagination = ({
 								<PaginationLink
 									onClick={() => handleClick(curPage)}
 									isActive
+									className="cursor-pointer"
 								>
 									{curPage}
 								</PaginationLink>
