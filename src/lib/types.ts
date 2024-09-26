@@ -9,6 +9,11 @@ export type PaginationData = {
 	perPage: number;
 	count: number;
 };
+export type FilterParams = {
+	user?: string;
+	role?: string;
+	isActive?: boolean;
+};
 const UserLoginDataSchema = z.object({
 	email: z.string().email(),
 	password: z.string(),

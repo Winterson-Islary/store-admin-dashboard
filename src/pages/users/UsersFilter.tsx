@@ -6,11 +6,14 @@ import {
 	SelectTrigger,
 	SelectValue,
 } from "@/components/ui/select";
-import type { TFilterChange } from "@/lib/types";
+import type { FilterParams, TFilterChange } from "@/lib/types";
 import { Search } from "lucide-react";
+import { useState } from "react";
 import CreateUser from "./CreateUser";
 
 const UsersFilter = ({ onFilterChange }: TFilterChange) => {
+	const [filterParams, setFilterParams] = useState<FilterParams>({});
+	console.log(filterParams);
 	return (
 		<div className="mb-2 flex gap-5 justify-between">
 			<div className="flex gap-2">
@@ -21,14 +24,20 @@ const UsersFilter = ({ onFilterChange }: TFilterChange) => {
 						placeholder="Search User"
 						className="appearance-none bg-background pl-8 shadow-none w-[200px]"
 						onChange={(e) =>
-							onFilterChange("searchFilter", e.target.value)
+							setFilterParams((prev) => ({
+								...prev,
+								user: e.target.value,
+							}))
 						}
 					/>
 				</div>
 				<div className="flex gap-2">
 					<Select
 						onValueChange={(value) =>
-							onFilterChange("roleFilter", value)
+							setFilterParams((prev) => ({
+								...prev,
+								role: value === "none" ? undefined : value,
+							}))
 						}
 					>
 						<SelectTrigger className="w-[150px]">
@@ -43,7 +52,15 @@ const UsersFilter = ({ onFilterChange }: TFilterChange) => {
 					</Select>
 					<Select
 						onValueChange={(value) =>
-							onFilterChange("statusFilter", value)
+							setFilterParams((prev) => ({
+								...prev,
+								isActive:
+									value === "active"
+										? true
+										: value === "inactive"
+											? false
+											: undefined,
+							}))
 						}
 					>
 						<SelectTrigger className="w-[150px]">

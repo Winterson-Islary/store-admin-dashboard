@@ -33,7 +33,6 @@ import { Link, Navigate } from "react-router-dom";
 
 import UserPagination from "./UserPagination";
 
-import { Skeleton } from "@/components/ui/skeleton";
 import UsersFilter from "./UsersFilter";
 
 export const Users = () => {
