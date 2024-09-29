@@ -7,6 +7,7 @@ import {
 	TableHeader,
 	TableRow,
 } from "@/components/ui/table";
+import { useDebounce } from "@/hooks/useDebounce";
 import { GetUsers } from "@/http/client";
 import type { TPageStateChange, UsersData } from "@/lib/types";
 import { useAuthStore } from "@/store";
@@ -22,7 +23,7 @@ const UsersList = ({
 	pageState: TPageStateChange;
 	setPageState: React.Dispatch<React.SetStateAction<TPageStateChange>>;
 }) => {
-	console.log(pageState);
+	const debounceSearch = useDebounce(pageState);
 	const { User } = useAuthStore();
 	if (User === null) {
 		return <Navigate to="/auth/login" replace />;
@@ -31,18 +32,18 @@ const UsersList = ({
 		return <Navigate to="/" replace />;
 	}
 	const userQuery = useQuery({
-		queryKey: ["users", pageState],
+		queryKey: ["users", debounceSearch],
 		queryFn: () => {
-			const temp = Object.keys(pageState).reduce(
+			const temp = Object.keys(debounceSearch).reduce(
 				(acc, key) => {
 					if (
-						pageState[key as keyof TPageStateChange] ===
+						debounceSearch[key as keyof TPageStateChange] ===
 							undefined ||
-						pageState[key as keyof TPageStateChange] === ""
+						debounceSearch[key as keyof TPageStateChange] === ""
 					) {
 						return acc;
 					}
-					acc[key] = pageState[key as keyof TPageStateChange];
+					acc[key] = debounceSearch[key as keyof TPageStateChange];
 					return acc;
 				},
 				{} as Record<string, string | boolean | number | undefined>,
@@ -55,6 +56,7 @@ const UsersList = ({
 			return GetUsers(queryString);
 		},
 	});
+
 	if (userQuery.isLoading) {
 		return (
 			<div className="h-screen flex  justify-center">
@@ -107,29 +109,37 @@ const UsersList = ({
 						</TableHeader>
 
 						<TableBody>
-							{usersData.map((user) => (
-								<TableRow key={user.id}>
-									<TableCell>{user.name}</TableCell>
-
-									<TableCell>
-										{user.isActive ? "ACTIVE" : "INACTIVE"}
-									</TableCell>
-
-									<TableCell>{user.role}</TableCell>
-
-									<TableCell>{user.email}</TableCell>
-
-									<TableCell>
-										{
-											user.createdAt
-
-												.toString()
-
-												.split("T")[0]
-										}
-									</TableCell>
+							{userQuery.isLoading ? (
+								<TableRow>
+									<TableCell>Loading....</TableCell>
 								</TableRow>
-							))}
+							) : (
+								usersData.map((user) => (
+									<TableRow key={user.id}>
+										<TableCell>{user.name}</TableCell>
+
+										<TableCell>
+											{user.isActive
+												? "ACTIVE"
+												: "INACTIVE"}
+										</TableCell>
+
+										<TableCell>{user.role}</TableCell>
+
+										<TableCell>{user.email}</TableCell>
+
+										<TableCell>
+											{
+												user.createdAt
+
+													.toString()
+
+													.split("T")[0]
+											}
+										</TableCell>
+									</TableRow>
+								))
+							)}
 						</TableBody>
 					</Table>
 				</section>
