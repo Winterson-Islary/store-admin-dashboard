@@ -1,8 +1,12 @@
 import type { InternalAxiosRequestConfig } from "axios";
 import { z } from "zod";
 
-export type TFilterChange = {
-	onFilterChange: (filterName: string, value: string) => void;
+export type TPageStateChange = {
+	curPage: number;
+	perPage: number;
+	user?: string;
+	role?: string;
+	isActive?: boolean;
 };
 export type PaginationData = {
 	curPage: number;
