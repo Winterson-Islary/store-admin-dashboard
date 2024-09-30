@@ -56,7 +56,6 @@ const UsersList = ({
 			return GetUsers(queryString);
 		},
 	});
-
 	if (userQuery.isLoading) {
 		return (
 			<div className="h-screen flex  justify-center">
@@ -66,7 +65,6 @@ const UsersList = ({
 	}
 
 	console.log(userQuery.data);
-
 	const usersData: UsersData[] = !userQuery.isError
 		? userQuery.data.users
 		: [];
@@ -97,13 +95,10 @@ const UsersList = ({
 						<TableHeader>
 							<TableRow>
 								<TableHead>Username</TableHead>
-
 								<TableHead>Status</TableHead>
-
 								<TableHead>Role</TableHead>
-
 								<TableHead>Email</TableHead>
-
+								<TableHead>Tenant</TableHead>
 								<TableHead>Registration Date</TableHead>
 							</TableRow>
 						</TableHeader>
@@ -123,11 +118,11 @@ const UsersList = ({
 												? "ACTIVE"
 												: "INACTIVE"}
 										</TableCell>
-
 										<TableCell>{user.role}</TableCell>
-
 										<TableCell>{user.email}</TableCell>
-
+										<TableCell>
+											{user.tenant?.name}
+										</TableCell>
 										<TableCell>
 											{
 												user.createdAt
