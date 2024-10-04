@@ -14,6 +14,8 @@ export type PaginationData = {
 	count: number;
 };
 export type TenantFilterParams = {
+	curPage: number;
+	perPage: number;
 	search?: string;
 };
 export type FilterParams = {
