@@ -13,6 +13,9 @@ export type PaginationData = {
 	perPage: number;
 	count: number;
 };
+export type TenantFilterParams = {
+	search?: string;
+};
 export type FilterParams = {
 	user?: string;
 	role?: string;

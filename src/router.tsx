@@ -1,13 +1,13 @@
 import Dashboard from "@/layouts/Dashboard";
 import Home from "@/pages/Home";
 import { Products } from "@/pages/Products";
+import { Promos } from "@/pages/Promos";
 import LoginPage from "@/pages/login/login";
+import { Restaurants } from "@/pages/restaurants/Restaurants";
+import { Users } from "@/pages/users/Users";
 import { createBrowserRouter } from "react-router-dom";
 import NoAuth from "./layouts/NoAuth";
 import Root from "./layouts/Root";
-import { Promos } from "./pages/Promos";
-import { Restaurants } from "./pages/Restaurants";
-import { Users } from "./pages/users/Users";
 
 export const router = createBrowserRouter([
 	{
