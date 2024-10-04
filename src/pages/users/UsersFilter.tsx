@@ -20,7 +20,7 @@ const UsersFilter = () => {
 	const [filterParams, setFilterParams] = useState<FilterParams>({});
 	useEffect(() => {
 		setPageState((prev: TPageStateChange) => {
-			return { ...prev, ...filterParams };
+			return { ...prev, ...filterParams, curPage: 1 };
 		});
 	}, [filterParams]);
 	return (

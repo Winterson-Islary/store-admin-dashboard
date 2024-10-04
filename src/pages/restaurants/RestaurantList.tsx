@@ -1,4 +1,5 @@
 import { useDebounce } from "@/hooks/useDebounce";
+import { getTenants } from "@/http/api";
 import type { TenantFilterParams } from "@/lib/types";
 import { useAuthStore } from "@/store";
 import { useQuery } from "@tanstack/react-query";
@@ -47,8 +48,7 @@ const RestaurantList = ({
 			const queryString = new URLSearchParams(
 				temp as unknown as Record<string, string>,
 			).toString();
-			console.log(queryString);
-			return queryString;
+			return getTenants(queryString);
 		},
 	});
 	return <div>Restaurant List</div>;

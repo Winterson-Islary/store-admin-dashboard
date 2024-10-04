@@ -9,4 +9,5 @@ export const whoami = async () => api.get("/auth/whoami");
 export const logout = async () => api.post("/auth/logout");
 export const createUser = async (user: CreateUserData) =>
 	api.post("/users", user);
-export const getTenants = async () => api.get("/tenants/getAll");
+export const getTenants = async (queryString: string) =>
+	api.get(`/tenants/?${queryString}`);
