@@ -277,6 +277,7 @@ const GetMenuItems = (
 
 	if (role !== "admin" && role !== "super") {
 		navItems.splice(1, 1);
+		navItems.splice(1, 1);
 	}
 
 	return navItems;
