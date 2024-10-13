@@ -1,6 +1,14 @@
+import {
+	Table,
+	TableBody,
+	TableCell,
+	TableHead,
+	TableHeader,
+	TableRow,
+} from "@/components/ui/table";
 import { useDebounce } from "@/hooks/useDebounce";
-import { getTenants } from "@/http/api";
-import type { TenantFilterParams } from "@/lib/types";
+import { GetTenants } from "@/http/client";
+import type { TenantFilterParams, Tenants } from "@/lib/types";
 import { useAuthStore } from "@/store";
 import { useQuery } from "@tanstack/react-query";
 import { Navigate } from "react-router-dom";
@@ -48,10 +56,59 @@ const RestaurantList = ({
 			const queryString = new URLSearchParams(
 				temp as unknown as Record<string, string>,
 			).toString();
-			return getTenants(queryString);
+			return GetTenants(queryString);
 		},
 	});
-	return <div>Restaurant List</div>;
+	if (tenantQuery.isLoading) {
+		return (
+			<div className="h-screen flex  justify-center">
+				<p className="text-2xl mt-20">Loading...</p>
+			</div>
+		);
+	}
+	const tenantsData: Tenants[] = !tenantQuery.isError
+		? tenantQuery.data.data
+		: [];
+	console.log(tenantsData[0]);
+	return (
+		<div>
+			<section className=" 2xl:w-[70%] mx-auto">
+				<Table>
+					<TableHeader>
+						<TableRow>
+							<TableHead>ID</TableHead>
+							<TableHead>Name</TableHead>
+							<TableHead>Address</TableHead>
+							<TableHead>Registered On </TableHead>
+						</TableRow>
+					</TableHeader>
+
+					<TableBody>
+						{tenantQuery.isLoading ? (
+							<TableRow>
+								<TableCell>Loading....</TableCell>
+							</TableRow>
+						) : (
+							tenantsData.map((tenant) => (
+								<TableRow key={tenant.id}>
+									<TableCell>{tenant.id}</TableCell>
+									<TableCell>{tenant.name}</TableCell>
+									<TableCell>{tenant.address}</TableCell>
+									<TableCell>
+										{
+											tenant.createdAt
+												.toString()
+												.split("T")[0]
+										}
+									</TableCell>
+								</TableRow>
+							))
+						)}
+					</TableBody>
+				</Table>
+			</section>
+		</div>
+	);
 };
 
 export default RestaurantList;

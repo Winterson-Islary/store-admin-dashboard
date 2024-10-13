@@ -6,7 +6,7 @@ import type {
 } from "@/lib/types";
 import { useAuthStore } from "@/store";
 import axios, { type AxiosError } from "axios";
-import { createUser, getUsers, login, whoami } from "./api";
+import { createUser, getTenants, getUsers, login, whoami } from "./api";
 
 const api = axios.create({
 	baseURL: import.meta.env.VITE_BACKEND_API_URL,
@@ -72,4 +72,8 @@ const CreateUser = async (user: CreateUserData) => {
 	return;
 };
 
-export { api, LoginUser, GetSelf, GetUsers, CreateUser };
+const GetTenants = async (queryString: string) => {
+	const { data } = await getTenants(queryString);
+	return data;
+};
+export { api, LoginUser, GetSelf, GetUsers, CreateUser, GetTenants };

@@ -112,7 +112,6 @@ const UsersList = ({
 								usersData.map((user) => (
 									<TableRow key={user.id}>
 										<TableCell>{user.name}</TableCell>
-
 										<TableCell>
 											{user.isActive
 												? "ACTIVE"

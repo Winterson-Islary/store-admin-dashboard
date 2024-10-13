@@ -41,7 +41,6 @@ export const Restaurants = () => {
 			</header>
 			<main className="md:px-5">
 				<RestaurantFilter />
-				<h2>Welcome to Restaurants Page</h2>
 			</main>
 		</>
 	);
