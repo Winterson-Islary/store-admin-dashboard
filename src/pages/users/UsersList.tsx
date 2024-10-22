@@ -1,3 +1,4 @@
+import { Button } from "@/components/ui/button";
 import { CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import {
 	Table,
@@ -9,19 +10,23 @@ import {
 } from "@/components/ui/table";
 import { useDebounce } from "@/hooks/useDebounce";
 import { GetUsers } from "@/http/client";
-import type { TPageStateChange, UsersData } from "@/lib/types";
+import type { TPageStateChange, UpdateUser, UsersData } from "@/lib/types";
+import { StringToRole } from "@/lib/utils";
 import { useAuthStore } from "@/store";
 import { useQuery } from "@tanstack/react-query";
 import { List } from "lucide-react";
+import type React from "react";
 import { Navigate } from "react-router-dom";
 import UserPagination from "./UserPagination";
 
 const UsersList = ({
 	pageState,
 	setPageState,
+	setCurrentEditUser,
 }: {
 	pageState: TPageStateChange;
 	setPageState: React.Dispatch<React.SetStateAction<TPageStateChange>>;
+	setCurrentEditUser: React.Dispatch<React.SetStateAction<UpdateUser | null>>;
 }) => {
 	const debounceSearch = useDebounce(pageState);
 	const { User } = useAuthStore();
@@ -63,8 +68,6 @@ const UsersList = ({
 			</div>
 		);
 	}
-
-	console.log(userQuery.data);
 	const usersData: UsersData[] = !userQuery.isError
 		? userQuery.data.users
 		: [];
@@ -130,6 +133,26 @@ const UsersList = ({
 
 													.split("T")[0]
 											}
+										</TableCell>
+										<TableCell>
+											<Button
+												variant="outline"
+												onClick={() => {
+													setCurrentEditUser({
+														id: user.id,
+														name: user.name,
+														role: StringToRole(
+															user.role,
+														),
+														email: user.email,
+														tenantId: String(
+															user.tenant?.id,
+														),
+													});
+												}}
+											>
+												Edit
+											</Button>
 										</TableCell>
 									</TableRow>
 								))

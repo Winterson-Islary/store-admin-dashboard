@@ -28,18 +28,26 @@ import {
 	type CreateUserData,
 	CreateUserSchema,
 	type Tenants,
+	type UpdateUser,
 } from "@/lib/types";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { Plus } from "lucide-react";
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useForm } from "react-hook-form";
 
-const CreateUser = () => {
+const CreateUser = ({
+	currentEditUser,
+}: { currentEditUser: UpdateUser | null }) => {
 	const [dialogOpen, setDialogOpen] = useState(false);
 	const queryClient = useQueryClient();
 	const [passwordMatch, setPasswordMatch] = useState<boolean>(true);
 	const passwordRef = useRef<HTMLInputElement>(null);
+	useEffect(() => {
+		if (currentEditUser) {
+			setDialogOpen(true);
+		}
+	}, [currentEditUser]);
 	const form = useForm<CreateUserData>({
 		resolver: zodResolver(CreateUserSchema),
 		defaultValues: {
@@ -51,7 +59,7 @@ const CreateUser = () => {
 	const createUserQuery = useQuery<{ data: Tenants[] }>({
 		queryKey: ["tenants"],
 		queryFn: () => {
-			return getTenants().then((res) => res.data);
+			return getTenants("").then((res) => res.data);
 		},
 	});
 	const createUserMutation = useMutation({
@@ -64,7 +72,7 @@ const CreateUser = () => {
 		},
 	});
 
-	console.log("Tenants List: ", createUserQuery.data?.data); //! LOG FOR DEBUGGING PURPOSES
+	// console.log("Tenants List: ", createUserQuery.data?.data); //! LOG FOR DEBUGGING PURPOSES
 	const onSubmit = async (values: CreateUserData) => {
 		if (values.tenantId === "none") {
 			values.tenantId = undefined;
@@ -72,10 +80,10 @@ const CreateUser = () => {
 		const matchingPassword = passwordRef.current?.value === values.password;
 		matchingPassword ? setPasswordMatch(true) : setPasswordMatch(false);
 		if (!matchingPassword) {
-			console.log("Passwords do not match"); //! REMOVE LOG
+			// console.log("Passwords do not match"); //! REMOVE LOG
 			return;
 		}
-		console.log("Inside on Submit Success: ", values); //! REMOVE LOG
+		// console.log("Inside on Submit Success: ", values); //! REMOVE LOG
 		await createUserMutation.mutate(values);
 	};
 	return (

@@ -6,7 +6,7 @@ import {
 	SelectTrigger,
 	SelectValue,
 } from "@/components/ui/select";
-import type { FilterParams, TPageStateChange } from "@/lib/types";
+import type { FilterParams, TPageStateChange, UpdateUser } from "@/lib/types";
 import { Search } from "lucide-react";
 import { useEffect, useState } from "react";
 import CreateUser from "./CreateUser";
@@ -18,6 +18,12 @@ const UsersFilter = () => {
 		perPage: 5,
 	});
 	const [filterParams, setFilterParams] = useState<FilterParams>({});
+	const [currentEditUser, setCurrentEditUser] = useState<UpdateUser | null>(
+		null,
+	);
+	console.dir(
+		`Current Edited User: ${currentEditUser?.name}, Location: UsersFilter`,
+	);
 	useEffect(() => {
 		setPageState((prev: TPageStateChange) => {
 			return { ...prev, ...filterParams, curPage: 1 };
@@ -89,11 +95,15 @@ const UsersFilter = () => {
 					</div>
 				</div>
 				<div>
-					<CreateUser />
+					<CreateUser currentEditUser={currentEditUser} />
 				</div>
 			</div>
 			<div>
-				<UsersList pageState={pageState} setPageState={setPageState} />
+				<UsersList
+					pageState={pageState}
+					setPageState={setPageState}
+					setCurrentEditUser={setCurrentEditUser}
+				/>
 			</div>
 		</main>
 	);

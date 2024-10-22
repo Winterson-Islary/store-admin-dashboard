@@ -54,6 +54,7 @@ export const CreateUserSchema = z.object({
 	password: z.string().min(8, "Password must be of at least 8 characters"),
 	email: z.string().email(),
 	tenantId: z.string().optional(),
+	isActive: z.boolean().optional(),
 });
 const SelfDataSchema = z.object({
 	id: z.number(),
@@ -61,7 +62,18 @@ const SelfDataSchema = z.object({
 	name: z.string(),
 	tenant: TenantSchema.optional(),
 });
-
+const UpdateUserSchema = z.object({
+	id: z.number(),
+	name: z
+		.string()
+		.min(1, "Name cannot be empty")
+		.max(100, "Name cannot be more than 100 characters long"),
+	role: z.enum(["customer", "admin", "manager"]).default("customer"),
+	email: z.string().email(),
+	tenantId: z.string().optional(),
+	isActive: z.boolean().optional(),
+});
+export type UpdateUser = z.infer<typeof UpdateUserSchema>;
 export type UserLoginData = z.infer<typeof UserLoginDataSchema>;
 export type SelfData = z.infer<typeof SelfDataSchema>;
 export type UsersData = z.infer<typeof UsersSchema>;
