@@ -95,7 +95,10 @@ const UsersFilter = () => {
 					</div>
 				</div>
 				<div>
-					<CreateUser currentEditUser={currentEditUser} />
+					<CreateUser
+						currentEditUser={currentEditUser}
+						setCurrentEditUser={setCurrentEditUser}
+					/>
 				</div>
 			</div>
 			<div>

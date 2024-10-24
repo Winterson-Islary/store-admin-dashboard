@@ -38,7 +38,11 @@ import { useForm } from "react-hook-form";
 
 const CreateUser = ({
 	currentEditUser,
-}: { currentEditUser: UpdateUser | null }) => {
+	setCurrentEditUser,
+}: {
+	currentEditUser: UpdateUser | null;
+	setCurrentEditUser: React.Dispatch<React.SetStateAction<UpdateUser | null>>;
+}) => {
 	const [dialogOpen, setDialogOpen] = useState(false);
 	const queryClient = useQueryClient();
 	const [passwordMatch, setPasswordMatch] = useState<boolean>(true);
@@ -51,8 +55,6 @@ const CreateUser = ({
 	const form = useForm<CreateUserData>({
 		resolver: zodResolver(CreateUserSchema),
 		defaultValues: {
-			name: "",
-			email: "",
 			password: "",
 		},
 	});
@@ -71,7 +73,10 @@ const CreateUser = ({
 			return;
 		},
 	});
-
+	function HandleOnOpenChange() {
+		setCurrentEditUser(null);
+		setDialogOpen((prev) => !prev);
+	}
 	// console.log("Tenants List: ", createUserQuery.data?.data); //! LOG FOR DEBUGGING PURPOSES
 	const onSubmit = async (values: CreateUserData) => {
 		if (values.tenantId === "none") {
@@ -88,7 +93,7 @@ const CreateUser = ({
 	};
 	return (
 		<div>
-			<Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
+			<Dialog open={dialogOpen} onOpenChange={HandleOnOpenChange}>
 				<DialogTrigger>
 					<div className="text-black  bg-[#dff265] hover:bg-[#daed62] flex gap-1 px-3 py-[0.35em] rounded-md items-center text-base w-[150px]">
 						<Plus width={13} height={13} /> <span>CREATE USER</span>
@@ -122,6 +127,11 @@ const CreateUser = ({
 													<Input
 														id="name"
 														type="text"
+														defaultValue={
+															currentEditUser?.name
+																? currentEditUser.name
+																: ""
+														}
 														{...field}
 													/>
 												</div>
@@ -143,6 +153,11 @@ const CreateUser = ({
 													<Input
 														id="email"
 														type="text"
+														defaultValue={
+															currentEditUser?.email
+																? currentEditUser.email
+																: ""
+														}
 														{...field}
 													/>
 												</div>
@@ -166,7 +181,11 @@ const CreateUser = ({
 															onValueChange={
 																field.onChange
 															}
-															defaultValue="customer"
+															defaultValue={
+																currentEditUser?.role
+																	? currentEditUser.role
+																	: "customer"
+															}
 														>
 															<SelectTrigger
 																id="role"
@@ -206,7 +225,11 @@ const CreateUser = ({
 															onValueChange={
 																field.onChange
 															}
-															defaultValue="none"
+															defaultValue={
+																currentEditUser?.tenantId
+																	? currentEditUser.tenantId
+																	: "none"
+															}
 														>
 															<SelectTrigger
 																id="tenant"
@@ -248,49 +271,63 @@ const CreateUser = ({
 										)}
 									/>
 								</section>
-								<FormField
-									control={form.control}
-									name="password"
-									render={({ field }) => (
-										<FormItem>
-											<FormControl>
-												<div className="grid w-full items-center gap-1.5">
-													<Label htmlFor="password">
-														Password
-													</Label>
-													<Input
-														id="password"
-														type="password"
-														{...field}
-													/>
-												</div>
-											</FormControl>
-											<FormMessage />
-										</FormItem>
-									)}
-								/>
-								<div className="grid w-full items-center gap-1.5">
-									<Label htmlFor="retype-password">
-										Confirm Password
-									</Label>
-									<Input
-										ref={passwordRef}
-										id="retype-password"
-										type="password"
-									/>
-									{!passwordMatch && (
-										<p className="text-destructive font-semibold text-[0.820rem]">
-											Passwords do not match
-										</p>
-									)}
-								</div>
-								<Button
-									type="submit"
-									className="mt-5"
-									disabled={createUserQuery.isLoading}
-								>
-									SUBMIT
-								</Button>
+								{!currentEditUser && (
+									<>
+										<FormField
+											control={form.control}
+											name="password"
+											render={({ field }) => (
+												<FormItem>
+													<FormControl>
+														<div className="grid w-full items-center gap-1.5">
+															<Label htmlFor="password">
+																Password
+															</Label>
+															<Input
+																id="password"
+																type="password"
+																{...field}
+															/>
+														</div>
+													</FormControl>
+													<FormMessage />
+												</FormItem>
+											)}
+										/>
+										<div className="grid w-full items-center gap-1.5">
+											<Label htmlFor="retype-password">
+												Confirm Password
+											</Label>
+											<Input
+												ref={passwordRef}
+												id="retype-password"
+												type="password"
+											/>
+											{!passwordMatch && (
+												<p className="text-destructive font-semibold text-[0.820rem]">
+													Passwords do not match
+												</p>
+											)}
+										</div>
+									</>
+								)}
+								{currentEditUser?.id ? (
+									<Button
+										type="submit"
+										className="mt-5"
+										disabled={createUserQuery.isLoading}
+									>
+										UPDATE
+									</Button>
+								) : (
+									<Button
+										type="submit"
+										className="mt-5"
+										disabled={createUserQuery.isLoading}
+									>
+										SUBMIT
+									</Button>
+								)}
 							</section>
 						</form>
 					</Form>
