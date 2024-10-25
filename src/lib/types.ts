@@ -62,7 +62,7 @@ const SelfDataSchema = z.object({
 	name: z.string(),
 	tenant: TenantSchema.optional(),
 });
-const UpdateUserSchema = z.object({
+export const UpdateUserSchema = z.object({
 	id: z.number(),
 	name: z
 		.string()

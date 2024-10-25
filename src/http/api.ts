@@ -1,4 +1,4 @@
-import type { CreateUserData, UserLoginData } from "@/lib/types";
+import type { CreateUserData, UpdateUser, UserLoginData } from "@/lib/types";
 import { api } from "./client";
 
 export const login = async (Data: UserLoginData) =>
@@ -9,5 +9,6 @@ export const whoami = async () => api.get("/auth/whoami");
 export const logout = async () => api.post("/auth/logout");
 export const createUser = async (user: CreateUserData) =>
 	api.post("/users", user);
+export const updateUser = async (user: UpdateUser) => api.patch("/users", user);
 export const getTenants = async (queryString: string) =>
 	api.get(`/tenants/?${queryString}`);
